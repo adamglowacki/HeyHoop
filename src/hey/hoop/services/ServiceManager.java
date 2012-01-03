@@ -20,8 +20,8 @@ public class ServiceManager {
 	}
 
 	public static void startListener(Context ctx) {
-		Intent starter = new Intent(ctx, ServiceLaunchReceiver.class);
-		ctx.startActivity(starter);
+		Intent service = new Intent(ctx, ListenerService.class);
+		ctx.startService(service);
 	}
 
 	public static void startAndRegisterListener(Context ctx) {
@@ -32,8 +32,8 @@ public class ServiceManager {
 	}
 
 	public static void stopAndDeregisterListener(Context ctx) {
-		Intent stoper = new Intent(ctx, ListenerService.class);
-		ctx.stopService(stoper);
+		Intent service = new Intent(ctx, ListenerService.class);
+		ctx.stopService(service);
 		ctx.getPackageManager().setComponentEnabledSetting(
 				new ComponentName(ctx, ServiceLaunchReceiver.class),
 				PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0);

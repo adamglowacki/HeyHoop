@@ -5,101 +5,6 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="true" >
-
-        <TextView
-            android:id="@+id/labelX"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/label_x"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/editX"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="true" >
-
-        <TextView
-            android:id="@+id/labelY"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/label_y"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/editY"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="true" >
-
-        <TextView
-            android:id="@+id/labelZ"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/label_z"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/editZ"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="true" >
-
-        <TextView
-            android:id="@+id/labelResolution"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/label_resolution"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/editResolution"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="true" >
-
-        <TextView
-            android:id="@+id/labelMinDelay"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/label_min_delay"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/editMinDelay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
-    </LinearLayout>
-
-    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -121,30 +26,10 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/startServiceButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/start_service_button" />
-
-        <Button
-            android:id="@+id/stopServiceButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/stop_service_button" />
-
-        <Button
             android:id="@+id/viewEntriesButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/view_entries_button" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/openChartButton"

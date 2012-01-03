@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, HeyHoopActivity!</string>
     <string name="app_name">HeyHoop</string>
     <string name="provider_name">Data for chart</string>
-    <string name="label_x">x</string>
-    <string name="label_y">y</string>
-    <string name="label_z">z</string>
-    <string name="label_resolution">resolution</string>
-    <string name="label_min_delay">min delay</string>
-    <string name="accuracy_changed">Accuracy of the accelerometer has changed.</string>
-    <string name="hey">Hey!</string>
-    <string name="start_service_button">Start service</string>
-    <string name="stop_service_button">Stop service</string>
     <string name="view_entries_button">View entries</string>
     <string name="open_chart_button">Open chart</string>
     <string name="no_entries">Empty</string>
-    <string name="download_title">ChartDroid needed</string>
-    <string name="download_message">In order to see a chart you need to download ChartDroid application.</string>
-    <string name="download_market">Market download</string>
-    <string name="download_web">Web download</string>
-    <string name="chart_x_axis_label">Time</string>
-    <string name="chart_y_axis_label">Acceleration magnitude</string>
-    <string name="chart_title">Acceleration from last 24h</string>
+    <string name="chartdroid_download_title">ChartDroid needed</string>
+    <string name="chartdroid_download_message">In order to see a chart you need to download ChartDroid application.</string>
+    <string name="chartdroid_download_market">Market download</string>
+    <string name="chartdroid_download_web">Web download</string>
+    <string name="dialog_walk_title">Walk</string>
+    <string name="dialog_walk_message_running">Walk tracker is running.</string>
+    <string name="dialog_walk_message_stopped">Walk tracker is stopped.</string>
+    <string name="dialog_walk_start">Start</string>
+    <string name="dialog_walk_stop">Stop</string>
+    <string name="chart_acceleration_x_axis_label">Time</string>
+    <string name="chart_acceleration_y_axis_label">Acceleration magnitude</string>
+    <string name="chart_acceleration_title">Last 24h</string>
+    <string name="main_menu_food">Food</string>
+    <string name="main_menu_bed">Bed</string>
+    <string name="main_menu_walk">Walk</string>
 
 </resources>

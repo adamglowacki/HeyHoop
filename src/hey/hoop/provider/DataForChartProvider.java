@@ -52,13 +52,16 @@ public class DataForChartProvider extends ContentProvider {
 		if (ColumnSchema.Aspect.DATASET_ASPECT_AXES.equals(aspect)) {
 			MatrixCursor c = new MatrixCursor(new String[] { BaseColumns._ID,
 					ColumnSchema.Aspect.Axes.COLUMN_AXIS_LABEL });
-			c.newRow().add(0).add(r.getString(R.string.chart_x_axis_label));
-			c.newRow().add(1).add(r.getString(R.string.chart_y_axis_label));
+			c.newRow().add(0)
+					.add(r.getString(R.string.chart_acceleration_x_axis_label));
+			c.newRow().add(1)
+					.add(r.getString(R.string.chart_acceleration_y_axis_label));
 			return c;
 		} else if (ColumnSchema.Aspect.DATASET_ASPECT_SERIES.equals(aspect)) {
 			MatrixCursor c = new MatrixCursor(new String[] { BaseColumns._ID,
 					ColumnSchema.Aspect.Series.COLUMN_SERIES_LABEL });
-			c.newRow().add(0).add(r.getString(R.string.chart_title));
+			c.newRow().add(0)
+					.add(r.getString(R.string.chart_acceleration_title));
 			return c;
 		} else {
 			/* data */
