@@ -23,7 +23,7 @@ public class HHDbAdapter {
 			+ MAIN_TABLE_NAME + " (" + MAIN_COLUMN_ID
 			+ " integer primary key autoincrement," + MAIN_COLUMN_VALUE
 			+ " real not null," + MAIN_COLUMN_DATE
-			+ " default current_timestamp" + ")";
+			+ " integer default current_timestamp" + ")";
 	private static final String CREATE_SIDE_TABLE = "create table "
 			+ SIDE_TABLE_NAME + " (" + SIDE_COLUMN_ID
 			+ " integer primary key autoincrement," + SIDE_COLUMN_VALUE
@@ -118,10 +118,13 @@ public class HHDbAdapter {
 		return bounds;
 	}
 
-	public Cursor fetchEntries(long max) {
+	public Cursor fetchEntries() {
+		final String CURRENT_TIME = "STRFTIME('%s', 'now')";
+		final int DAY_IN_SECONDS = 24 * 60 * 60;
 		return mDb.query(MAIN_TABLE_NAME, new String[] { MAIN_COLUMN_ID,
-				MAIN_COLUMN_VALUE, MAIN_COLUMN_DATE }, null, null, null, null,
-				MAIN_COLUMN_DATE + " DESC", Long.toString(max));
+				MAIN_COLUMN_VALUE, MAIN_COLUMN_DATE }, MAIN_COLUMN_DATE
+				+ " BETWEEN " + CURRENT_TIME + " - " + DAY_IN_SECONDS + " AND "
+				+ CURRENT_TIME, null, null, null, MAIN_COLUMN_DATE + " DESC");
 		// return mDb.query(SIDE_TABLE_NAME, new String[] { SIDE_COLUMN_ID,
 		// SIDE_COLUMN_VALUE }, null, null, null, null, SIDE_COLUMN_ID,
 		// Long.toString(max));

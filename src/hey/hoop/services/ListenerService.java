@@ -1,4 +1,6 @@
-package hey.hoop;
+package hey.hoop.services;
+
+import hey.hoop.HHDbAdapter;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -15,18 +17,15 @@ import android.widget.Toast;
 public class ListenerService extends Service implements SensorEventListener {
 	private static final int SAMPLE_SIZE = 20;
 	private static int mSampleCounter;
-	private static final float ALPHA = 0.8f;
 	private static final int DIMS = 3;
 	private ScheduledThreadPoolExecutor mExecutor;
 	private SensorManager mSensorManager;
 	private Sensor mSensor;
 	private HHDbAdapter mDbAdapter;
-	private float[] gravity;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		gravity = new float[DIMS];
 		mExecutor = new ScheduledThreadPoolExecutor(1);
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 		mSensor = mSensorManager
@@ -72,13 +71,10 @@ public class ListenerService extends Service implements SensorEventListener {
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		// float[] filtered = filterOutNoise(filterOutGravity(event.values));
 		float[] filtered = event.values;
 		float value = 0;
 		for (int i = 0; i < DIMS; ++i)
 			value += Math.abs(filtered[i]);
-		// value += filtered[i] * filtered[i];
-		// value = (float) Math.sqrt(value);
 		mDbAdapter.open(true);
 		mDbAdapter.insertReading(value);
 		mDbAdapter.close();
@@ -95,21 +91,4 @@ public class ListenerService extends Service implements SensorEventListener {
 		mDbAdapter.flushReadings();
 		mDbAdapter.close();
 	}
-
-	private float[] filterOutGravity(float[] values) {
-		float[] filtered = new float[DIMS];
-		for (int i = 0; i < DIMS; ++i) {
-			gravity[i] = ALPHA * gravity[i] + (1 - ALPHA) * values[i];
-			filtered[i] = values[i] - gravity[i];
-		}
-		return filtered;
-	}
-
-	private float[] filterOutNoise(float[] values) {
-		float[] filtered = new float[DIMS];
-		for (int i = 0; i < DIMS; ++i)
-			filtered[i] = Math.round(values[i]);
-		return filtered;
-	}
-
 }

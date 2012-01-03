@@ -3,6 +3,7 @@
 
     <string name="hello">Hello World, HeyHoopActivity!</string>
     <string name="app_name">HeyHoop</string>
+    <string name="provider_name">Data for chart</string>
     <string name="label_x">x</string>
     <string name="label_y">y</string>
     <string name="label_z">z</string>
@@ -15,5 +16,12 @@
     <string name="view_entries_button">View entries</string>
     <string name="open_chart_button">Open chart</string>
     <string name="no_entries">Empty</string>
+    <string name="download_title">ChartDroid needed</string>
+    <string name="download_message">In order to see a chart you need to download ChartDroid application.</string>
+    <string name="download_market">Market download</string>
+    <string name="download_web">Web download</string>
+    <string name="chart_x_axis_label">Time</string>
+    <string name="chart_y_axis_label">Acceleration magnitude</string>
+    <string name="chart_title">Acceleration from last 24h</string>
 
 </resources>

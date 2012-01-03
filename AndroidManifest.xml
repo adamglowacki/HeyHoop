@@ -4,13 +4,19 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk android:minSdkVersion="3" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
+        <provider
+            android:authorities="hey.hoop.provider"
+            android:label="@string/provider_name"
+            android:name=".provider.DataForChartProvider" />
+
         <activity
             android:label="@string/app_name"
             android:name=".HeyHoopActivity" >
@@ -20,12 +26,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ServiceLaunchActivity" >
-        </activity>
         <activity android:name="ListDbActivity" >
         </activity>
 
-        <service android:name="ListenerService" >
+        <receiver
+            android:enabled="false"
+            android:name="services.ServiceLaunchReceiver" >
+            <intent-filter >
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".services.ListenerService" >
         </service>
     </application>
 
