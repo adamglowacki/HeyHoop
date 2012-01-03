@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, HeyHoopActivity!</string>
+    <string name="app_name">HeyHoop</string>
+    <string name="label_x">x</string>
+    <string name="label_y">y</string>
+    <string name="label_z">z</string>
+    <string name="label_resolution">resolution</string>
+    <string name="label_min_delay">min delay</string>
+    <string name="accuracy_changed">Accuracy of the accelerometer has changed.</string>
+    <string name="hey">Hey!</string>
+    <string name="start_service_button">Start service</string>
+    <string name="stop_service_button">Stop service</string>
+    <string name="view_entries_button">View entries</string>
+    <string name="open_chart_button">Open chart</string>
+    <string name="no_entries">Empty</string>
+
+</resources>
