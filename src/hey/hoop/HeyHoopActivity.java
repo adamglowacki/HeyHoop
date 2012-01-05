@@ -11,7 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.Toast;
+import hey.hoop.animal.Animal;
+import hey.hoop.animal.Kangaroo;
+import hey.hoop.chartdroid.IntentConstants;
 import hey.hoop.provider.DataForChartProvider;
 import hey.hoop.services.ServiceManager;
 
@@ -20,6 +24,8 @@ public class HeyHoopActivity extends Activity {
     private static final int DIALOG_START_WALK = 1;
     private static final int DIALOG_STOP_WALK = 2;
     private static final String TAG = "Hey Hoop";
+
+    private Animal animal;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,7 @@ public class HeyHoopActivity extends Activity {
                     public void onClick(View v) {
                         Intent openChartIntent = new Intent(Intent.ACTION_VIEW,
                                 DataForChartProvider.PROVIDER_URI);
+                        openChartIntent.addCategory(IntentConstants.CATEGORY_XY_CHART);
                         if (Market.isIntentAvailable(HeyHoopActivity.this,
                                 openChartIntent))
                             startActivity(openChartIntent);
@@ -47,6 +54,7 @@ public class HeyHoopActivity extends Activity {
                             showDialog(DIALOG_CHARTDROID_DOWNLOAD);
                     }
                 });
+        animal = new Kangaroo(this, (ImageView) findViewById(R.id.animalWindow));
     }
 
     @Override
@@ -59,13 +67,12 @@ public class HeyHoopActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.food) {
-            Toast.makeText(this, "Food chosen", Toast.LENGTH_SHORT).show();
+            animal.feed(Animal.Meal.BREAKFAST);
             return true;
         } else if (id == R.id.bed) {
-            Toast.makeText(this, "Bed chosen", Toast.LENGTH_SHORT).show();
+            animal.putToBed();
             return true;
         } else if (id == R.id.walk) {
-            Toast.makeText(this, "Walk chosen", Toast.LENGTH_SHORT).show();
             configWalk();
             return true;
         } else

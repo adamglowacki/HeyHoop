@@ -5,6 +5,10 @@ public interface Animal {
 		BREAKFAST, DINNER, SUPPER
 	};
 
+    public void resume();
+
+    public void pause();
+
 	public void feed(Meal meal);
 
 	public void putToBed();

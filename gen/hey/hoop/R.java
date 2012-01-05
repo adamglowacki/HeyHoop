@@ -11,9 +11,9 @@ public final class R {
     public static final class attr {
     }
     public static final class dimen {
-        public static final int id_gap=0x7f040001;
-        public static final int list_row_margin=0x7f040000;
-        public static final int value_gap=0x7f040002;
+        public static final int id_gap=0x7f050001;
+        public static final int list_row_margin=0x7f050000;
+        public static final int value_gap=0x7f050002;
     }
     public static final class drawable {
         public static final int bed=0x7f020000;
@@ -22,16 +22,16 @@ public final class R {
         public static final int walk=0x7f020003;
     }
     public static final class id {
-        public static final int bed=0x7f070008;
-        public static final int chart_layout=0x7f070000;
-        public static final int dateField=0x7f070003;
-        public static final int food=0x7f070007;
-        public static final int idField=0x7f070001;
-        public static final int openChartButton=0x7f070006;
-        public static final int progressBar1=0x7f070004;
-        public static final int valueField=0x7f070002;
-        public static final int viewEntriesButton=0x7f070005;
-        public static final int walk=0x7f070009;
+        public static final int animalWindow=0x7f080006;
+        public static final int bed=0x7f080008;
+        public static final int chart_layout=0x7f080000;
+        public static final int dateField=0x7f080003;
+        public static final int food=0x7f080007;
+        public static final int idField=0x7f080001;
+        public static final int openChartButton=0x7f080005;
+        public static final int valueField=0x7f080002;
+        public static final int viewEntriesButton=0x7f080004;
+        public static final int walk=0x7f080009;
     }
     public static final class layout {
         public static final int chart_layout=0x7f030000;
@@ -40,28 +40,36 @@ public final class R {
         public static final int main=0x7f030003;
     }
     public static final class menu {
-        public static final int main_menu=0x7f060000;
+        public static final int main_menu=0x7f070000;
+    }
+    public static final class raw {
+        public static final int kangaroo_normal=0x7f040000;
     }
     public static final class string {
-        public static final int app_name=0x7f050000;
-        public static final int chart_acceleration_title=0x7f050010;
-        public static final int chart_acceleration_x_axis_label=0x7f05000e;
-        public static final int chart_acceleration_y_axis_label=0x7f05000f;
-        public static final int chartdroid_download_market=0x7f050007;
-        public static final int chartdroid_download_message=0x7f050006;
-        public static final int chartdroid_download_title=0x7f050005;
-        public static final int chartdroid_download_web=0x7f050008;
-        public static final int dialog_walk_message_running=0x7f05000a;
-        public static final int dialog_walk_message_stopped=0x7f05000b;
-        public static final int dialog_walk_start=0x7f05000c;
-        public static final int dialog_walk_stop=0x7f05000d;
-        public static final int dialog_walk_title=0x7f050009;
-        public static final int main_menu_bed=0x7f050012;
-        public static final int main_menu_food=0x7f050011;
-        public static final int main_menu_walk=0x7f050013;
-        public static final int no_entries=0x7f050004;
-        public static final int open_chart_button=0x7f050003;
-        public static final int provider_name=0x7f050001;
-        public static final int view_entries_button=0x7f050002;
+        public static final int app_name=0x7f060000;
+        public static final int bed_thanks=0x7f060018;
+        public static final int breakfast_thanks=0x7f060014;
+        public static final int chart_acceleration_title=0x7f060010;
+        public static final int chart_acceleration_x_axis_label=0x7f06000e;
+        public static final int chart_acceleration_y_axis_label=0x7f06000f;
+        public static final int chartdroid_download_market=0x7f060007;
+        public static final int chartdroid_download_message=0x7f060006;
+        public static final int chartdroid_download_title=0x7f060005;
+        public static final int chartdroid_download_web=0x7f060008;
+        public static final int dialog_walk_message_running=0x7f06000a;
+        public static final int dialog_walk_message_stopped=0x7f06000b;
+        public static final int dialog_walk_start=0x7f06000c;
+        public static final int dialog_walk_stop=0x7f06000d;
+        public static final int dialog_walk_title=0x7f060009;
+        public static final int dinner_thanks=0x7f060015;
+        public static final int main_menu_bed=0x7f060012;
+        public static final int main_menu_food=0x7f060011;
+        public static final int main_menu_walk=0x7f060013;
+        public static final int no_entries=0x7f060004;
+        public static final int open_chart_button=0x7f060003;
+        public static final int provider_name=0x7f060001;
+        public static final int supper_thanks=0x7f060016;
+        public static final int unknown_food_thanks=0x7f060017;
+        public static final int view_entries_button=0x7f060002;
     }
 }

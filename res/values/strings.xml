@@ -7,7 +7,8 @@
     <string name="open_chart_button">Open chart</string>
     <string name="no_entries">Empty</string>
     <string name="chartdroid_download_title">ChartDroid needed</string>
-    <string name="chartdroid_download_message">In order to see a chart you need to download ChartDroid application.</string>
+    <string name="chartdroid_download_message">In order to see a chart you need to download ChartDroid application.
+    </string>
     <string name="chartdroid_download_market">Market download</string>
     <string name="chartdroid_download_web">Web download</string>
     <string name="dialog_walk_title">Walk</string>
@@ -21,5 +22,10 @@
     <string name="main_menu_food">Food</string>
     <string name="main_menu_bed">Bed</string>
     <string name="main_menu_walk">Walk</string>
+    <string name="breakfast_thanks">I love breakfast!</string>
+    <string name="dinner_thanks">What a nice-looking food!</string>
+    <string name="supper_thanks">Thank you, I like it!</string>
+    <string name="unknown_food_thanks">Thank you, I like it!</string>
+    <string name="bed_thanks">Oh, no! Do I really have to go sleep? It is so early.</string>
 
 </resources>
