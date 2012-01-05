@@ -16,7 +16,7 @@ public class Kangaroo implements Animal {
 
     @Override
     public void resume() {
-//        window.setImageDrawable(normalSvg.createPictureDrawable());
+        window.setImageResource(R.drawable.kangaroo_normal);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Kangaroo implements Animal {
                 toast = Toast.makeText(ctx, R.string.dinner_thanks, Toast.LENGTH_LONG);
                 break;
             case SUPPER:
-                toast = Toast.makeText(ctx, R.string.dinner_thanks, Toast.LENGTH_LONG);
+                toast = Toast.makeText(ctx, R.string.supper_thanks, Toast.LENGTH_LONG);
                 break;
             default:
                 toast = Toast.makeText(ctx, R.string.unknown_food_thanks, Toast.LENGTH_LONG);

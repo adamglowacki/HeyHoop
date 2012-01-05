@@ -1,10 +1,5 @@
 package hey.hoop.services;
 
-import hey.hoop.HHDbAdapter;
-
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
 import android.app.Service;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -13,6 +8,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.widget.Toast;
+import hey.hoop.HHDbAdapter;
+import hey.hoop.R;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class ListenerService extends Service implements SensorEventListener {
     private static final int SAMPLE_SIZE = 20;
@@ -41,14 +41,12 @@ public class ListenerService extends Service implements SensorEventListener {
                 public void run() {
                     synchronized (ListenerService.this) {
                         mSampleCounter = 0;
-                        mDbAdapter.deleteReadings();
-                        mSensorManager.registerListener(ListenerService.this,
-                                mSensor, SensorManager.SENSOR_DELAY_NORMAL);
+                        deleteReadings();
+                        mSensorManager.registerListener(ListenerService.this, mSensor, SensorManager.SENSOR_DELAY_NORMAL);
                     }
                 }
             }, 5L, 30L, TimeUnit.SECONDS);
-        Toast.makeText(ListenerService.this, "Task scheduled",
-                Toast.LENGTH_LONG).show();
+        Toast.makeText(ListenerService.this, R.string.walk_track_started, Toast.LENGTH_LONG).show();
         return Service.START_STICKY;
     }
 
@@ -60,9 +58,8 @@ public class ListenerService extends Service implements SensorEventListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "Service about to be destroyed!",
-                Toast.LENGTH_LONG).show();
         mExecutor.shutdown();
+        Toast.makeText(this, R.string.walk_track_stopped, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -76,10 +73,8 @@ public class ListenerService extends Service implements SensorEventListener {
         float value = 0;
         for (int i = 0; i < DIMS; ++i)
             value += Math.abs(filtered[i]);
-        mDbAdapter.open(true);
-        mDbAdapter.insertReading(value);
-        mDbAdapter.close();
         synchronized (this) {
+            insertReading(value);
             if (++mSampleCounter >= SAMPLE_SIZE) {
                 mSensorManager.unregisterListener(this);
                 flushReadings();
@@ -87,9 +82,21 @@ public class ListenerService extends Service implements SensorEventListener {
         }
     }
 
+    private void insertReading(float value) {
+        mDbAdapter.open(true);
+        mDbAdapter.insertReading(value);
+        mDbAdapter.close();
+    }
+
     private void flushReadings() {
         mDbAdapter.open(true);
         mDbAdapter.flushReadings();
+        mDbAdapter.close();
+    }
+
+    private void deleteReadings() {
+        mDbAdapter.open(true);
+        mDbAdapter.deleteReadings();
         mDbAdapter.close();
     }
 }

@@ -1,7 +1,7 @@
 package hey.hoop.chartdroid;
 
 /**
- * Copied from ChartDroid example.
+ * Copied from ChartDroid example (and modified a bit).
  */
 public class IntentConstants {
 

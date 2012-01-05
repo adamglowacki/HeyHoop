@@ -2,9 +2,8 @@
 <resources>
 
     <string name="app_name">HeyHoop</string>
+    <string name="title">Hey Hoop</string>
     <string name="provider_name">Data for chart</string>
-    <string name="view_entries_button">View entries</string>
-    <string name="open_chart_button">Open chart</string>
     <string name="no_entries">Empty</string>
     <string name="chartdroid_download_title">ChartDroid needed</string>
     <string name="chartdroid_download_message">In order to see a chart you need to download ChartDroid application.
@@ -20,8 +19,16 @@
     <string name="chart_acceleration_y_axis_label">Acceleration magnitude</string>
     <string name="chart_acceleration_title">Last 24h</string>
     <string name="main_menu_food">Food</string>
+    <string name="breakfast_item">Breakfast</string>
+    <string name="dinner_item">Dinner</string>
+    <string name="supper_item">Supper</string>
     <string name="main_menu_bed">Bed</string>
-    <string name="main_menu_walk">Walk</string>
+    <string name="main_menu_walk">Walk-meter</string>
+    <string name="main_menu_charts">Charts</string>
+    <string name="main_menu_walk_entries">Walk entries</string>
+    <string name="chart_walk">Walk</string>
+    <string name="walk_track_started">Walk-tracking started</string>
+    <string name="walk_track_stopped">Walk-tracking stopped</string>
     <string name="breakfast_thanks">I love breakfast!</string>
     <string name="dinner_thanks">What a nice-looking food!</string>
     <string name="supper_thanks">Thank you, I like it!</string>

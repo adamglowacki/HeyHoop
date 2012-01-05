@@ -26,16 +26,16 @@ public class ServiceManager {
 
     public static void startAndRegisterListener(Context ctx) {
         startListener(ctx);
-        ctx.getPackageManager().setComponentEnabledSetting(
-                new ComponentName(ctx, ServiceLaunchReceiver.class),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0);
+//        ctx.getPackageManager().setComponentEnabledSetting(
+//                new ComponentName(ctx, ServiceLaunchReceiver.class),
+//                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0);
     }
 
     public static void stopAndUnregisterListener(Context ctx) {
         Intent service = new Intent(ctx, ListenerService.class);
         ctx.stopService(service);
-        ctx.getPackageManager().setComponentEnabledSetting(
-                new ComponentName(ctx, ServiceLaunchReceiver.class),
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0);
+//        ctx.getPackageManager().setComponentEnabledSetting(
+//                new ComponentName(ctx, ServiceLaunchReceiver.class),
+//                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0);
     }
 }
