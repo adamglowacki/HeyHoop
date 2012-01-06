@@ -4,15 +4,7 @@
               android:layout_height="fill_parent"
               android:orientation="vertical">
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-    </LinearLayout>
-
-    <ImageView android:id="@+id/animalWindow" android:layout_height="match_parent" android:layout_width="match_parent"
+    <ImageView android:id="@+id/animalWindow" android:layout_height="fill_parent" android:layout_width="fill_parent"
                android:scaleType="center"/>
 
 </LinearLayout>

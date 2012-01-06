@@ -22,6 +22,9 @@
     <string name="breakfast_item">Breakfast</string>
     <string name="dinner_item">Dinner</string>
     <string name="supper_item">Supper</string>
+    <string name="main_menu_drink">Drink</string>
+    <string name="water_item">Water</string>
+    <string name="carrot_juice_item">Carrot juice</string>
     <string name="main_menu_bed">Bed</string>
     <string name="main_menu_walk">Walk-meter</string>
     <string name="main_menu_charts">Charts</string>

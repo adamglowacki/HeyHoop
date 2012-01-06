@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="true">
+    <item android:drawable="@drawable/kangaroo_normal" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_01" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_02" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_03" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_04" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_05" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_06" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_07" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_08" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_09" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_10" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_11" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_12" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_13" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_14" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_15" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_stroked_16" android:duration="200"/>
+    <item android:drawable="@drawable/kangaroo_normal" android:duration="200"/>
+</animation-list>

@@ -12,4 +12,6 @@ public interface Animal {
     public void feed(Meal meal);
 
     public void putToBed();
+
+    public void stroke();
 }
