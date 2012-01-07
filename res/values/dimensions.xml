@@ -4,5 +4,6 @@
     <dimen name="list_row_margin">3dp</dimen>
     <dimen name="id_gap">10dp</dimen>
     <dimen name="value_gap">20dp</dimen>
+    <dimen name="artifact1_bottom_margin">50dip</dimen>
 
 </resources>

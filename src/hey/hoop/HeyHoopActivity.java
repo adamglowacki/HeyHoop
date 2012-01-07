@@ -17,6 +17,9 @@ import hey.hoop.chartdroid.IntentConstants;
 import hey.hoop.provider.DataForChartProvider;
 import hey.hoop.services.ServiceManager;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 public class HeyHoopActivity extends Activity {
     private static final int DIALOG_CHARTDROID_DOWNLOAD = 0;
     private static final int DIALOG_START_WALK = 1;
@@ -30,7 +33,26 @@ public class HeyHoopActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         setTitle(R.string.title);
-        animal = new Kangaroo(this, (ImageView) findViewById(R.id.animalWindow));
+        animal = new Kangaroo(this, (ImageView) findViewById(R.id.animalWindow),
+                (ImageView) findViewById(R.id.artifact1), new Animal.Executable() {
+            @Override
+            public void execute() {
+                callInvalidateOptionsMenu();
+            }
+        });
+    }
+
+    private void callInvalidateOptionsMenu() {
+        try {
+            Method m = getClass().getMethod("invalidateOptionsMenu");
+            m.invoke(this);
+        } catch (NoSuchMethodException e) {
+            Log.d(TAG, "We are before Honeycomb.");
+        } catch (InvocationTargetException e) {
+            Log.e(TAG, e.getMessage());
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, e.getMessage());
+        }
     }
 
     @Override
@@ -52,32 +74,45 @@ public class HeyHoopActivity extends Activity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.setGroupVisible(R.id.sleeping_related_group, true);
+        if (animal.isAsleep()) {
+            menu.findItem(R.id.food).setVisible(false);
+            menu.findItem(R.id.drink).setVisible(false);
+            menu.findItem(R.id.bed).setVisible(false);
+        } else {
+            menu.findItem(R.id.wake).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.breakfast) {
             animal.feed(Animal.Meal.BREAKFAST);
-            return true;
         } else if (id == R.id.dinner) {
             animal.feed(Animal.Meal.DINNER);
-            return true;
         } else if (id == R.id.supper) {
             animal.feed(Animal.Meal.SUPPER);
-            return true;
+        } else if (id == R.id.water) {
+            animal.drink(Animal.Drink.WATER);
+        } else if (id == R.id.carrot_juice) {
+            animal.drink(Animal.Drink.CARROT_JUICE);
         } else if (id == R.id.bed) {
             animal.putToBed();
-            return true;
+        } else if (id == R.id.wake) {
+            animal.wakeUp();
         } else if (id == R.id.walk) {
             configWalk();
-            return true;
         } else if (id == R.id.chartWalk) {
             openWalkChart();
-            return true;
         } else if (id == R.id.walkEntries) {
             Intent viewEntriesIntent = new Intent(HeyHoopActivity.this, ListDbActivity.class);
             startActivity(viewEntriesIntent);
-            return true;
         } else
             return super.onOptionsItemSelected(item);
+        return true;
     }
 
     @Override

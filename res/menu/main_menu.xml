@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/sleeping_related_group">
 
-    <item android:icon="@drawable/food"
-          android:title="@string/main_menu_food">
-        <menu>
-            <item android:id="@+id/breakfast" android:title="@string/breakfast_item"/>
-            <item android:id="@+id/dinner" android:title="@string/dinner_item"/>
-            <item android:id="@+id/supper" android:title="@string/supper_item"/>
-        </menu>
-    </item>
-    <item android:icon="@drawable/drink" android:title="@string/main_menu_drink">
-        <menu>
-            <item android:id="@+id/water" android:title="@string/water_item" />
-            <item android:id="@+id/carrot_juice" android:title="@string/carrot_juice_item" />
-        </menu>
-    </item>
-    <item android:id="@+id/bed" android:icon="@drawable/bed"
-          android:title="@string/main_menu_bed"/>
-    <item android:id="@+id/walk" android:icon="@drawable/walk"
-          android:title="@string/main_menu_walk"/>
+        <item android:id="@+id/food" android:icon="@drawable/food" android:title="@string/main_menu_food">
+            <menu>
+                <item android:id="@+id/breakfast" android:title="@string/breakfast_item"/>
+                <item android:id="@+id/dinner" android:title="@string/dinner_item"/>
+                <item android:id="@+id/supper" android:title="@string/supper_item"/>
+            </menu>
+        </item>
+        <item android:id="@+id/drink" android:icon="@drawable/drink" android:title="@string/main_menu_drink">
+            <menu>
+                <item android:id="@+id/water" android:title="@string/water_item"/>
+                <item android:id="@+id/carrot_juice" android:title="@string/carrot_juice_item"/>
+            </menu>
+        </item>
+        <item android:id="@+id/bed" android:icon="@drawable/zzz" android:title="@string/main_menu_bed"/>
+        <item android:id="@+id/wake" android:icon="@drawable/wake" android:title="@string/main_menu_wake"/>
+    </group>
+    <item android:id="@+id/walk" android:icon="@drawable/walk" android:title="@string/main_menu_walk"/>
     <item android:icon="@drawable/chart" android:title="@string/main_menu_charts">
         <menu>
             <item android:id="@+id/chartWalk" android:title="@string/chart_walk"/>
         </menu>
     </item>
-    <item android:id="@+id/walkEntries" android:title="@string/main_menu_walk_entries" />
+    <item android:id="@+id/walkEntries" android:title="@string/main_menu_walk_entries"/>
 
 </menu>

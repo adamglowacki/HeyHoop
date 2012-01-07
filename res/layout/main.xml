@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:orientation="vertical">
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ImageView android:id="@+id/animalWindow" android:layout_height="fill_parent" android:layout_width="fill_parent"
                android:scaleType="center"/>
-
-</LinearLayout>
+    <ImageView android:id="@+id/artifact1" android:layout_height="wrap_content" android:layout_width="wrap_content"
+               android:layout_gravity="center_horizontal|bottom"
+               android:layout_marginBottom="@dimen/artifact1_bottom_margin"/>
+</merge>

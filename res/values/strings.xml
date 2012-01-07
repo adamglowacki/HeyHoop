@@ -26,6 +26,7 @@
     <string name="water_item">Water</string>
     <string name="carrot_juice_item">Carrot juice</string>
     <string name="main_menu_bed">Bed</string>
+    <string name="main_menu_wake">Wake him up</string>
     <string name="main_menu_walk">Walk-meter</string>
     <string name="main_menu_charts">Charts</string>
     <string name="main_menu_walk_entries">Walk entries</string>
@@ -35,7 +36,11 @@
     <string name="breakfast_thanks">I love breakfast!</string>
     <string name="dinner_thanks">What a nice-looking food!</string>
     <string name="supper_thanks">Thank you, I like it!</string>
-    <string name="unknown_food_thanks">Thank you, I like it!</string>
+    <string name="water_thanks">I would dry out without water, thank you!</string>
+    <string name="carrot_juice_thanks">Carrot is orange and full of vitamins!</string>
+    <string name="unknown_food_thanks">I have never had that but it smells nice.</string>
+    <string name="unknown_drink_thanks">What is that? I have never tasted it.</string>
     <string name="bed_thanks">Oh, no! Do I really have to go sleep? It is so early.</string>
+    <string name="bed_hello">Good morning! What a beautiful weather I can see.</string>
 
 </resources>
