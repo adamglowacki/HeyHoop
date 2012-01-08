@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <ImageView android:id="@+id/animalWindow" android:layout_height="fill_parent" android:layout_width="fill_parent"
-               android:scaleType="center"/>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="fill_parent"
+                android:layout_width="fill_parent">
+    <android.gesture.GestureOverlayView android:id="@+id/gesturesOverlay" android:layout_width="fill_parent"
+                                        android:layout_height="fill_parent" android:orientation="horizontal"
+                                        android:gestureColor="@color/gesture_recognized"
+                                        android:uncertainGestureColor="@color/gesture_unknown">
+        <ImageView android:id="@+id/animalWindow" android:layout_height="fill_parent"
+                   android:layout_width="fill_parent" android:scaleType="center"/>
+    </android.gesture.GestureOverlayView>
     <ImageView android:id="@+id/artifact1" android:layout_height="wrap_content" android:layout_width="wrap_content"
-               android:layout_gravity="center_horizontal|bottom"
+               android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
                android:layout_marginBottom="@dimen/artifact1_bottom_margin"/>
-</merge>
+    <ImageView android:id="@+id/artifact2" android:layout_width="wrap_content" android:layout_height="wrap_content"
+               android:layout_centerInParent="true"/>
+    <ImageView android:id="@+id/artifact3" android:layout_width="wrap_content" android:layout_height="wrap_content"
+               android:layout_centerInParent="true"/>
+</RelativeLayout>

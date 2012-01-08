@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.gesture.*;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,27 +20,45 @@ import hey.hoop.services.ServiceManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
-public class HeyHoopActivity extends Activity {
+public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGesturePerformedListener {
     private static final int DIALOG_CHARTDROID_DOWNLOAD = 0;
     private static final int DIALOG_START_WALK = 1;
     private static final int DIALOG_STOP_WALK = 2;
     private static final String TAG = "Hey Hoop";
 
-    private Animal animal;
+    private String GESTURE_STROKE;
+    private String GESTURE_WALK;
+    private String GESTURE_BED;
+
+    private Animal mAnimal;
+    private GestureLibrary mLibrary;
+    private static final double STROKE_FAVOUR_SCORE = 5.0;
+    private static final double ACCEPT_SCORE = 1.0;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         setTitle(R.string.title);
-        animal = new Kangaroo(this, (ImageView) findViewById(R.id.animalWindow),
-                (ImageView) findViewById(R.id.artifact1), new Animal.Executable() {
+        Animal.Executable menuInvalidator = new Animal.Executable() {
             @Override
             public void execute() {
                 callInvalidateOptionsMenu();
             }
-        });
+        };
+        mAnimal = new Kangaroo(this, (ImageView) findViewById(R.id.animalWindow),
+                (ImageView) findViewById(R.id.artifact1), (ImageView) findViewById(R.id.artifact2),
+                (ImageView) findViewById(R.id.artifact3), menuInvalidator);
+        mLibrary = GestureLibraries.fromRawResource(this, R.raw.gestures);
+        if (!mLibrary.load())
+            finish();
+        ((GestureOverlayView) findViewById(R.id.gesturesOverlay)).addOnGesturePerformedListener(this);
+        GESTURE_STROKE = getResources().getString(R.string.gesture_stroke);
+        GESTURE_WALK = getResources().getString(R.string.gesture_walk);
+        GESTURE_BED = getResources().getString(R.string.gesture_bed);
     }
 
     private void callInvalidateOptionsMenu() {
@@ -58,13 +77,13 @@ public class HeyHoopActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        animal.resume();
+        mAnimal.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        animal.pause();
+        mAnimal.pause();
     }
 
     @Override
@@ -76,7 +95,7 @@ public class HeyHoopActivity extends Activity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.setGroupVisible(R.id.sleeping_related_group, true);
-        if (animal.isAsleep()) {
+        if (mAnimal.isAsleep()) {
             menu.findItem(R.id.food).setVisible(false);
             menu.findItem(R.id.drink).setVisible(false);
             menu.findItem(R.id.bed).setVisible(false);
@@ -90,19 +109,19 @@ public class HeyHoopActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.breakfast) {
-            animal.feed(Animal.Meal.BREAKFAST);
+            mAnimal.feed(Animal.Meal.BREAKFAST);
         } else if (id == R.id.dinner) {
-            animal.feed(Animal.Meal.DINNER);
+            mAnimal.feed(Animal.Meal.DINNER);
         } else if (id == R.id.supper) {
-            animal.feed(Animal.Meal.SUPPER);
+            mAnimal.feed(Animal.Meal.SUPPER);
         } else if (id == R.id.water) {
-            animal.drink(Animal.Drink.WATER);
+            mAnimal.drink(Animal.Drink.WATER);
         } else if (id == R.id.carrot_juice) {
-            animal.drink(Animal.Drink.CARROT_JUICE);
+            mAnimal.drink(Animal.Drink.CARROT_JUICE);
         } else if (id == R.id.bed) {
-            animal.putToBed();
+            mAnimal.putToBed();
         } else if (id == R.id.wake) {
-            animal.wakeUp();
+            mAnimal.wakeUp();
         } else if (id == R.id.walk) {
             configWalk();
         } else if (id == R.id.chartWalk) {
@@ -189,12 +208,46 @@ public class HeyHoopActivity extends Activity {
     }
 
     private void openWalkChart() {
-        Intent openChartIntent = new Intent(Intent.ACTION_VIEW, DataForChartProvider.PROVIDER_URI);
+        Intent openChartIntent = new Intent(Intent.ACTION_VIEW, DataForChartProvider.WALK_URI);
         openChartIntent.addCategory(IntentConstants.CATEGORY_XY_CHART);
-//        openChartIntent.putExtra(IntentConstants.Meta.Axes.EXTRA_FORMAT_STRING_X, "%g");
         if (Market.isIntentAvailable(HeyHoopActivity.this, openChartIntent))
             startActivity(openChartIntent);
         else
             showDialog(DIALOG_CHARTDROID_DOWNLOAD);
+    }
+
+    private Prediction findStrokeGesture(ArrayList<Prediction> predictions) {
+        for (Prediction prediction : predictions)
+            if (GESTURE_STROKE.equals(prediction.name))
+                return prediction;
+        return null;
+    }
+
+    public void executeGesture(String name) {
+        if (GESTURE_STROKE.equals(name))
+            mAnimal.stroke();
+        else if (GESTURE_BED.equals(name))
+            mAnimal.putToBed();
+        else if (GESTURE_WALK.equals(name))
+            configWalk();
+    }
+
+    @Override
+    public void onGesturePerformed(GestureOverlayView gestureOverlayView, Gesture gesture) {
+        if (mAnimal.isAsleep())
+            mAnimal.wakeUp();
+        else {
+            ArrayList<Prediction> predictions = mLibrary.recognize(gesture);
+            if (predictions.size() > 0) {
+                Prediction stroke = findStrokeGesture(predictions);
+                if (stroke.score > STROKE_FAVOUR_SCORE)
+                    mAnimal.stroke();
+                else {
+                    Prediction theFirst = predictions.get(0);
+                    if (theFirst.score > ACCEPT_SCORE)
+                        executeGesture(theFirst.name);
+                }
+            }
+        }
     }
 }

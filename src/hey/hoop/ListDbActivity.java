@@ -24,10 +24,10 @@ public class ListDbActivity extends ListActivity {
 	}
 
 	private void fillData() {
-		Cursor c = dbAdapter.fetchEntries();
+		Cursor c = dbAdapter.fetchWalk();
 		startManagingCursor(c);
-		String[] from = new String[] { HHDbAdapter.MAIN_COLUMN_ID,
-				HHDbAdapter.MAIN_COLUMN_VALUE, HHDbAdapter.MAIN_COLUMN_DATE };
+		String[] from = new String[] { HHDbAdapter.WALK_COLUMN_ID,
+				HHDbAdapter.WALK_COLUMN_VALUE, HHDbAdapter.WALK_COLUMN_DATE};
 		int[] to = new int[] { R.id.idField, R.id.valueField, R.id.dateField };
 		SimpleCursorAdapter sca = new SimpleCursorAdapter(this,
 				R.layout.entry_row, c, from, to);

@@ -1,8 +1,5 @@
 package hey.hoop.provider;
 
-import hey.hoop.HHDbAdapter;
-import hey.hoop.R;
-import hey.hoop.chartdroid.ColumnSchema;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -11,14 +8,18 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import hey.hoop.HHDbAdapter;
+import hey.hoop.R;
+import hey.hoop.chartdroid.ColumnSchema;
 
 public class DataForChartProvider extends ContentProvider {
 
     static final String AUTHORITY = "hey.hoop.provider";
 
-    public static final Uri PROVIDER_URI = new Uri.Builder()
-            .scheme(ContentResolver.SCHEME_CONTENT).authority(AUTHORITY)
-            .build();
+    public static final String WALK = "walk", FOOD = "food", DRINK = "drink";
+    private static final String TYPE_PARAMETER = "type";
+    public static final Uri WALK_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(AUTHORITY)
+            .appendQueryParameter("type", WALK).build();
 
     public HHDbAdapter dbAdapter;
 
@@ -71,7 +72,7 @@ public class DataForChartProvider extends ContentProvider {
                     ColumnSchema.Aspect.Data.COLUMN_DATUM_VALUE,
                     ColumnSchema.Aspect.Data.COLUMN_DATUM_LABEL});
             dbAdapter.open(false);
-            Cursor c = dbAdapter.fetchEntries();
+            Cursor c = dbAdapter.fetchWalk();
             int row_index = 0;
             while (c.moveToNext()) {
                 mc.newRow().add(row_index).add(ColumnSchema.Y_AXIS_INDEX)

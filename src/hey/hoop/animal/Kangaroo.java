@@ -1,8 +1,11 @@
 package hey.hoop.animal;
 
 import android.content.Context;
+import android.os.Vibrator;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -12,11 +15,17 @@ import java.util.Date;
 import java.util.Random;
 
 public class Kangaroo implements Animal, View.OnTouchListener {
-    private Context ctx;
-    private ImageView window;
-    private ImageView artifact1;
-    private Random random;
-    private Executable onStateChange;
+    private Context mCtx;
+    private ImageView mWindow;
+    private ImageView mBottomArtifact;
+    private ImageView mCentreArtifact1;
+    private ImageView mCentreArtifact2;
+    private Random mRandom;
+    private Executable mOnStateChange;
+    private Vibrator mVibrator;
+    private static final long[] WAKE_VIBRATIONS = {0, 300};
+    private static final long[] BED_VIBRATIONS = {250, 400, 750, 400, 750, 400};
+    private static final long[] STROKE_VIBRATIONS = {0, 200, 100, 200};
 
     @Override
     public boolean isAsleep() {
@@ -25,27 +34,31 @@ public class Kangaroo implements Animal, View.OnTouchListener {
 
     private boolean asleep;
 
-    public Kangaroo(Context ctx, ImageView window, ImageView artifact1, Executable onStateChange) {
-        this.ctx = ctx;
-        this.window = window;
-        this.artifact1 = artifact1;
-        this.onStateChange = onStateChange;
-        random = new Random(new Date().getTime());
+    public Kangaroo(Context ctx, ImageView window, ImageView artifact1, ImageView artifact2, ImageView artifact3,
+                    Executable onStateChange) {
+        this.mCtx = ctx;
+        this.mWindow = window;
+        this.mBottomArtifact = artifact1;
+        this.mCentreArtifact1 = artifact2;
+        this.mCentreArtifact2 = artifact3;
+        this.mOnStateChange = onStateChange;
+        mRandom = new Random(new Date().getTime());
         asleep = false;
+        mVibrator = (Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     @Override
     public void resume() {
+        mWindow.setOnTouchListener(this);
         refresh();
-        window.setOnTouchListener(this);
     }
 
     private void refresh() {
         if (asleep)
-            window.setImageResource(R.drawable.kangaroo_zzz);
+            mWindow.setImageResource(R.drawable.kangaroo_zzz);
         else
-            window.setImageResource(R.drawable.kangaroo_normal);
-        onStateChange.execute();
+            mWindow.setImageResource(R.drawable.kangaroo_normal);
+        mOnStateChange.execute();
     }
 
     @Override
@@ -53,18 +66,28 @@ public class Kangaroo implements Animal, View.OnTouchListener {
     }
 
     private void showToast(int msgId) {
-        Toast.makeText(ctx, msgId, Toast.LENGTH_LONG).show();
+        Toast t = Toast.makeText(mCtx, msgId, Toast.LENGTH_LONG);
+        t.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 0);
+        t.show();
     }
 
     private void slideIn(int imgId) {
-//        TranslateAnimation slide = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 50.0f,
-//                Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
-        artifact1.setImageResource(imgId);
-        artifact1.startAnimation(AnimationUtils.loadAnimation(ctx, R.anim.slide));
+        mBottomArtifact.setImageResource(imgId);
+        mBottomArtifact.startAnimation(AnimationUtils.loadAnimation(mCtx, R.anim.slide));
+    }
+
+    private void flyAway(int imgId) {
+        mCentreArtifact1.setImageResource(imgId);
+        mCentreArtifact2.setImageResource(imgId);
+        Animation fly = AnimationUtils.loadAnimation(mCtx, R.anim.fly);
+        Animation flyDelayed = AnimationUtils.loadAnimation(mCtx, R.anim.fly);
+        flyDelayed.setStartOffset(750);
+        mCentreArtifact1.startAnimation(fly);
+        mCentreArtifact2.startAnimation(flyDelayed);
     }
 
     private void slideRandom(int... imgIds) {
-        int selected = random.nextInt(imgIds.length);
+        int selected = mRandom.nextInt(imgIds.length);
         slideIn(imgIds[selected]);
     }
 
@@ -109,29 +132,29 @@ public class Kangaroo implements Animal, View.OnTouchListener {
 
     @Override
     public void putToBed() {
-        Toast.makeText(ctx, R.string.bed_thanks, Toast.LENGTH_LONG).show();
+        mVibrator.vibrate(BED_VIBRATIONS, -1);
+        showToast(R.string.bed_thanks);
         asleep = true;
         refresh();
     }
 
     @Override
     public void wakeUp() {
-        Toast.makeText(ctx, R.string.bed_hello, Toast.LENGTH_LONG).show();
+        mVibrator.vibrate(WAKE_VIBRATIONS, -1);
+        showToast(R.string.bed_hello);
         asleep = false;
         refresh();
     }
 
     @Override
     public void stroke() {
-        artifact1.setImageResource(R.drawable.drink);
+        flyAway(R.drawable.big_watermelon);
+        mWindow.startAnimation(AnimationUtils.loadAnimation(mCtx, R.anim.shake));
+        mVibrator.vibrate(STROKE_VIBRATIONS, -1);
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-            stroke();
-            return true;
-        }
         return false;
     }
 }

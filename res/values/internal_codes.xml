@@ -1,0 +1,5 @@
+<resources>
+    <string name="gesture_stroke">stroke</string>
+    <string name="gesture_walk">walk</string>
+    <string name="gesture_bed">bed</string>
+</resources>

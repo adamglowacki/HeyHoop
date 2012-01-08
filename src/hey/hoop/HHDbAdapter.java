@@ -12,20 +12,38 @@ public class HHDbAdapter {
 
     private static final String DB_NAME = "heyhoopdb";
     private static final int DB_VERSION = 1;
-    private static final String MAIN_TABLE_NAME = "acceleration";
+    private static final String WALK_TABLE_NAME = "acceleration";
     private static final String SIDE_TABLE_NAME = "readings";
-    public static final String MAIN_COLUMN_ID = "_id";
-    public static final String MAIN_COLUMN_VALUE = "value";
-    public static final String MAIN_COLUMN_DATE = "date";
+    private static final String FOOD_TABLE_NAME = "food";
+    private static final String DRINK_TABLE_NAME = "drink";
+    public static final String WALK_COLUMN_ID = "_id";
+    public static final String WALK_COLUMN_VALUE = "value";
+    public static final String WALK_COLUMN_DATE = "date";
     public static final String SIDE_COLUMN_ID = "_id";
     public static final String SIDE_COLUMN_VALUE = "value";
-    private static final String CREATE_MAIN_TABLE = "create table " + MAIN_TABLE_NAME + " ("
-            + MAIN_COLUMN_ID + " integer primary key autoincrement,"
-            + MAIN_COLUMN_VALUE + " real not null,"
-            + MAIN_COLUMN_DATE + " integer)";
+    public static final String FOOD_COLUMN_ID = "_id";
+    public static final String FOOD_COLUMN_MEAL = "meal";
+    public static final String FOOD_COLUMN_DATE = "date";
+    public static final String DRINK_COLUMN_ID = "_id";
+    public static final String DRINK_COLUMN_KIND = "kind";
+    public static final String DRINK_COLUMN_AMOUNT = "amount";
+    public static final String DRINK_COLUMN_DATE = "date";
+    private static final String CREATE_WALK_TABLE = "create table " + WALK_TABLE_NAME + " ("
+            + WALK_COLUMN_ID + " integer primary key autoincrement,"
+            + WALK_COLUMN_VALUE + " real not null,"
+            + WALK_COLUMN_DATE + " integer)";
     private static final String CREATE_SIDE_TABLE = "create table " + SIDE_TABLE_NAME + " ("
             + SIDE_COLUMN_ID + " integer primary key autoincrement,"
             + SIDE_COLUMN_VALUE + " real not null)";
+    private static final String CREATE_FOOD_TABLE = "create table " + FOOD_TABLE_NAME + " ("
+            + FOOD_COLUMN_ID + " integer primary key autoincrement,"
+            + FOOD_COLUMN_MEAL + " real not null,"
+            + FOOD_COLUMN_DATE + " integer)";
+    private static final String CREATE_DRINK_TABLE = "create table " + DRINK_TABLE_NAME + " ("
+            + DRINK_COLUMN_ID + " integer primary key autoincrement,"
+            + DRINK_COLUMN_KIND + " real not null,"
+            + DRINK_COLUMN_AMOUNT + " real not null,"
+            + DRINK_COLUMN_DATE + " integer)";
 
     private DbHelper mDbHelper;
     private Context mCtx;
@@ -39,15 +57,19 @@ public class HHDbAdapter {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(CREATE_MAIN_TABLE);
+            db.execSQL(CREATE_WALK_TABLE);
             db.execSQL(CREATE_SIDE_TABLE);
+            db.execSQL(CREATE_FOOD_TABLE);
+            db.execSQL(CREATE_DRINK_TABLE);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             Log.i(TAG, "Upgrading db from " + oldVersion + " to " + newVersion);
-            db.execSQL("drop table " + MAIN_TABLE_NAME + " if exists");
+            db.execSQL("drop table " + WALK_TABLE_NAME + " if exists");
             db.execSQL("drop table " + SIDE_TABLE_NAME + " if exists");
+            db.execSQL("drop table " + FOOD_TABLE_NAME + " if exists");
+            db.execSQL("drop table " + DRINK_TABLE_NAME + " if exists");
             onCreate(db);
         }
 
@@ -76,36 +98,56 @@ public class HHDbAdapter {
         return mDb.insert(SIDE_TABLE_NAME, null, cv);
     }
 
+    public long registerEating(int meal) {
+        ContentValues cv = new ContentValues();
+        cv.put(FOOD_COLUMN_MEAL, meal);
+        return mDb.insert(FOOD_TABLE_NAME, null, cv);
+    }
+
+    public long registerDrinking(int kind, float amount) {
+        ContentValues cv = new ContentValues();
+        cv.put(DRINK_COLUMN_KIND, kind);
+        cv.put(DRINK_COLUMN_AMOUNT, amount);
+        return mDb.insert(DRINK_TABLE_NAME, null, cv);
+    }
+
     public void deleteReadings() {
         mDb.delete(SIDE_TABLE_NAME, null, null);
     }
 
     public void flushReadings() {
-        // Cursor p = mDb.query(SIDE_TABLE_NAME, new String[] { SIDE_COLUMN_ID,
-        // SIDE_COLUMN_VALUE }, null, null, null, null, null);
-        // while (p.moveToNext())
-        // Log.i(TAG,
-        // Integer.toString(p.getInt(0)) + ": "
-        // + Float.toString(p.getFloat(1)));
         Cursor c = mDb.query(SIDE_TABLE_NAME, new String[]{"AVG("
                 + SIDE_COLUMN_VALUE + "), STRFTIME('%s', 'now')"}, null, null, null, null, null);
         if (c.moveToFirst()) {
             float value = c.getFloat(0);
             int currentTime = c.getInt(1);
             ContentValues cv = new ContentValues();
-            cv.put(MAIN_COLUMN_VALUE, value);
-            cv.put(MAIN_COLUMN_DATE, currentTime);
-            mDb.insert(MAIN_TABLE_NAME, null, cv);
+            cv.put(WALK_COLUMN_VALUE, value);
+            cv.put(WALK_COLUMN_DATE, currentTime);
+            mDb.insert(WALK_TABLE_NAME, null, cv);
         }
         c.close();
     }
 
-    public Cursor fetchEntries() {
+    private String getLastDayClause(String fieldName) {
         final String CURRENT_TIME = "STRFTIME('%s', 'now')";
         final int DAY_IN_SECONDS = 24 * 60 * 60;
-        return mDb.query(MAIN_TABLE_NAME, new String[]{MAIN_COLUMN_ID,
-                MAIN_COLUMN_VALUE, MAIN_COLUMN_DATE}, MAIN_COLUMN_DATE
-                + " BETWEEN (" + CURRENT_TIME + " - " + DAY_IN_SECONDS + ") AND "
-                + CURRENT_TIME, null, null, null, MAIN_COLUMN_DATE + " DESC");
+        return fieldName + " BETWEEN (" + CURRENT_TIME + "-" + DAY_IN_SECONDS + ") AND " + CURRENT_TIME;
+    }
+
+    public Cursor fetchWalk() {
+        return mDb.query(WALK_TABLE_NAME, new String[]{WALK_COLUMN_ID,
+                WALK_COLUMN_VALUE, WALK_COLUMN_DATE}, getLastDayClause(WALK_COLUMN_DATE), null, null, null,
+                WALK_COLUMN_DATE + " DESC");
+    }
+
+    public Cursor fetchFood() {
+        return mDb.query(FOOD_TABLE_NAME, new String[]{FOOD_COLUMN_ID, FOOD_COLUMN_MEAL, FOOD_COLUMN_DATE},
+                getLastDayClause(FOOD_COLUMN_DATE), null, null, null, WALK_COLUMN_DATE + " DESC");
+    }
+
+    public Cursor fetchDrink() {
+        return mDb.query(DRINK_TABLE_NAME, new String[]{DRINK_COLUMN_ID, DRINK_COLUMN_KIND, DRINK_COLUMN_AMOUNT,
+                DRINK_COLUMN_DATE}, getLastDayClause(DRINK_COLUMN_DATE), null, null, null, DRINK_COLUMN_DATE + " DESC");
     }
 }
