@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.gesture.*;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +22,8 @@ import hey.hoop.services.ServiceManager;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGesturePerformedListener {
     private static final int DIALOG_CHARTDROID_DOWNLOAD = 0;
@@ -36,6 +39,11 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
     private GestureLibrary mLibrary;
     private static final double STROKE_FAVOUR_SCORE = 5.0;
     private static final double ACCEPT_SCORE = 1.0;
+
+    private HHDbAdapter dbAdapter;
+
+    private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
+    private static final long REFRESH_WELLBEING_INTERVAL = 5L;
 
 
     @Override
@@ -59,6 +67,7 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
         GESTURE_STROKE = getResources().getString(R.string.gesture_stroke);
         GESTURE_WALK = getResources().getString(R.string.gesture_walk);
         GESTURE_BED = getResources().getString(R.string.gesture_bed);
+        dbAdapter = new HHDbAdapter(this);
     }
 
     private void callInvalidateOptionsMenu() {
@@ -78,12 +87,25 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
     protected void onResume() {
         super.onResume();
         mAnimal.resume();
+        scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
+        scheduledThreadPoolExecutor.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                findViewById(R.id.wellbeing_layout).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshWellbeing();
+                    }
+                });
+            }
+        }, REFRESH_WELLBEING_INTERVAL, REFRESH_WELLBEING_INTERVAL, TimeUnit.SECONDS);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mAnimal.pause();
+        scheduledThreadPoolExecutor.shutdown();
     }
 
     @Override
@@ -195,6 +217,25 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
             Log.d(TAG, "has android market? " + hasAndroidMarket);
             dialog.findViewById(android.R.id.button1).setVisibility(
                     hasAndroidMarket ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void refreshWellbeing() {
+        findViewById(R.id.food_wellbeing_text).setBackgroundColor(getColorForWellbeing(dbAdapter.howNourished()));
+        findViewById(R.id.drink_wellbeing_text).setBackgroundColor(getColorForWellbeing(dbAdapter.howWatered()));
+        findViewById(R.id.walk_wellbeing_text).setBackgroundColor(getColorForWellbeing(dbAdapter.howWalked()));
+    }
+
+    private int getColorForWellbeing(HHDbAdapter.Wellbeing wellbeing) {
+        switch (wellbeing) {
+            case GOOD:
+                return getResources().getColor(R.color.wellbeing_good);
+            case POOR:
+                return getResources().getColor(R.color.wellbeing_poor);
+            case FATAL:
+                return getResources().getColor(R.color.wellbeing_fatal);
+            default:
+                return Color.WHITE;
         }
     }
 

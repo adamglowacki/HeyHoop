@@ -1,4 +1,7 @@
 <resources>
     <color name="gesture_recognized">#40ffff00</color>
     <color name="gesture_unknown">#10ffff00</color>
+    <color name="wellbeing_good">#ff00ff00</color>
+    <color name="wellbeing_poor">#10ffff00</color>
+    <color name="wellbeing_fatal">#ffff0000</color>
 </resources>

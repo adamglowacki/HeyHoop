@@ -42,5 +42,8 @@
     <string name="unknown_drink_thanks">What is that? I have never tasted it.</string>
     <string name="bed_thanks">Oh, no! Do I really have to go sleep? It is so early.</string>
     <string name="bed_hello">Good morning! What a beautiful weather I can see.</string>
+    <string name="food_wellbeing">Food</string>
+    <string name="drink_wellbeing">Drink</string>
+    <string name="walk_wellbeing">Walk</string>
 
 </resources>

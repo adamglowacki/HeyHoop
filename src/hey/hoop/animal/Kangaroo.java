@@ -3,8 +3,6 @@ package hey.hoop.animal;
 import android.content.Context;
 import android.os.Vibrator;
 import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -14,7 +12,7 @@ import hey.hoop.R;
 import java.util.Date;
 import java.util.Random;
 
-public class Kangaroo implements Animal, View.OnTouchListener {
+public class Kangaroo implements Animal {
     private Context mCtx;
     private ImageView mWindow;
     private ImageView mBottomArtifact;
@@ -27,12 +25,12 @@ public class Kangaroo implements Animal, View.OnTouchListener {
     private static final long[] BED_VIBRATIONS = {250, 400, 750, 400, 750, 400};
     private static final long[] STROKE_VIBRATIONS = {0, 200, 100, 200};
 
+    private boolean asleep;
+
     @Override
     public boolean isAsleep() {
         return asleep;
     }
-
-    private boolean asleep;
 
     public Kangaroo(Context ctx, ImageView window, ImageView artifact1, ImageView artifact2, ImageView artifact3,
                     Executable onStateChange) {
@@ -49,7 +47,6 @@ public class Kangaroo implements Animal, View.OnTouchListener {
 
     @Override
     public void resume() {
-        mWindow.setOnTouchListener(this);
         refresh();
     }
 
@@ -151,10 +148,5 @@ public class Kangaroo implements Animal, View.OnTouchListener {
         flyAway(R.drawable.big_watermelon);
         mWindow.startAnimation(AnimationUtils.loadAnimation(mCtx, R.anim.shake));
         mVibrator.vibrate(STROKE_VIBRATIONS, -1);
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        return false;
     }
 }

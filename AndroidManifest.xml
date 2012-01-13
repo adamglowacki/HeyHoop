@@ -1,43 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="hey.hoop"
-    android:versionCode="1"
-    android:versionName="1.0" >
+          package="hey.hoop"
+          android:versionCode="1"
+          android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk android:minSdkVersion="10"/>
 
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name" >
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name">
         <provider
-            android:authorities="hey.hoop.provider"
-            android:label="@string/provider_name"
-            android:name=".provider.DataForChartProvider" />
+                android:authorities="hey.hoop.provider"
+                android:label="@string/provider_name"
+                android:name=".provider.DataForChartProvider"/>
 
         <activity
-            android:label="@string/app_name"
-            android:name=".HeyHoopActivity" >
-            <intent-filter >
-                <action android:name="android.intent.action.MAIN" />
+                android:label="@string/app_name"
+                android:name=".HeyHoopActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="ListDbActivity" >
+        <activity android:name="ListDbActivity">
         </activity>
 
         <receiver
-            android:enabled="false"
-            android:name="services.ServiceLaunchReceiver" >
-            <intent-filter >
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                android:enabled="true"
+                android:name=".services.ServiceLaunchReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
-        <service android:name=".services.ListenerService" >
+        <receiver android:name=".appwidget.WidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/appwidget_info"/>
+        </receiver>
+
+        <service android:name=".services.ListenerService">
         </service>
     </application>
 

@@ -49,6 +49,10 @@ public class HHDbAdapter {
     private Context mCtx;
     private SQLiteDatabase mDb;
 
+    public enum Wellbeing {
+        FATAL, POOR, GOOD
+    }
+
     private class DbHelper extends SQLiteOpenHelper {
 
         public DbHelper(Context ctx) {
@@ -149,5 +153,17 @@ public class HHDbAdapter {
     public Cursor fetchDrink() {
         return mDb.query(DRINK_TABLE_NAME, new String[]{DRINK_COLUMN_ID, DRINK_COLUMN_KIND, DRINK_COLUMN_AMOUNT,
                 DRINK_COLUMN_DATE}, getLastDayClause(DRINK_COLUMN_DATE), null, null, null, DRINK_COLUMN_DATE + " DESC");
+    }
+
+    public Wellbeing howNourished() {
+        return Wellbeing.GOOD;
+    }
+
+    public Wellbeing howWatered() {
+        return Wellbeing.POOR;
+    }
+
+    public Wellbeing howWalked() {
+        return Wellbeing.FATAL;
     }
 }

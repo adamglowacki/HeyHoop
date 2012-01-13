@@ -20,6 +20,10 @@ public class DataForChartProvider extends ContentProvider {
     private static final String TYPE_PARAMETER = "type";
     public static final Uri WALK_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(AUTHORITY)
             .appendQueryParameter("type", WALK).build();
+    public static final Uri FOOD_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(AUTHORITY)
+            .appendQueryParameter("type", FOOD).build();
+    public static final Uri DRINK_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority(AUTHORITY)
+            .appendQueryParameter("type", DRINK).build();
 
     public HHDbAdapter dbAdapter;
 
@@ -48,6 +52,14 @@ public class DataForChartProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         Resources r = getContext().getResources();
+        String type = uri.getQueryParameter(TYPE_PARAMETER);
+        if (WALK.equals(type))
+            return queryWalk(uri, r);
+        else
+            return null;
+    }
+    
+    private Cursor queryWalk(Uri uri, Resources r) {
         String aspect = uri
                 .getQueryParameter(ColumnSchema.DATASET_ASPECT_PARAMETER);
         if (ColumnSchema.Aspect.DATASET_ASPECT_AXES.equals(aspect)) {
