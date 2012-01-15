@@ -40,12 +40,15 @@
         </LinearLayout>
         <LinearLayout android:layout_height="wrap_content" android:layout_width="wrap_content"
                       android:orientation="horizontal">
-            <TextView android:id="@+id/walk_wellbeing_text" android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/walk_wellbeing"/>
-            <android.widget.RatingBar android:id="@+id/walk_wellbeing_star" android:layout_height="wrap_content"
-                                      android:layout_width="wrap_content"
-                                      android:numStars="1" android:max="3"/>
+            <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/walk_status"
+                                                      android:layout_height="wrap_content"
+                                                      android:layout_width="wrap_content"/>
+            <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/drink_status"
+                                                      android:layout_height="wrap_content"
+                                                      android:layout_width="wrap_content"/>
+            <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/food_status"
+                                                      android:layout_height="wrap_content"
+                                                      android:layout_width="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

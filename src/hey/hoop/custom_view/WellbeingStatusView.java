@@ -2,6 +2,7 @@ package hey.hoop.custom_view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import hey.hoop.HHDbAdapter;
@@ -10,27 +11,40 @@ import hey.hoop.R;
 public class WellbeingStatusView extends View {
     private FetchWellbeing fetchWellbeing;
 
-    public WellbeingStatusView(Context context, FetchWellbeing fetch) {
-        super(context);
+    public WellbeingStatusView(Context context) {
+        this(context, null, 0);
+    }
+
+    public WellbeingStatusView(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
+    }
+
+    public WellbeingStatusView(Context context, AttributeSet attributeSet, int defStyle) {
+        super(context, attributeSet, defStyle);
         inflate(context, R.layout.wellbeing_status, null);
+    }
+
+    public void setFetchWellbeing(FetchWellbeing fetch) {
         this.fetchWellbeing = fetch;
     }
 
-    public CharSequence getText() {
-        return ((TextView) findViewById(R.id.wellbeing_status_text)).getText();
-    }
-    
     public void setText(CharSequence text) {
         ((TextView) findViewById(R.id.wellbeing_status_text)).setText(text);
+    }
+
+    public void setText(int resId) {
+        setText(getResources().getString(resId));
     }
 
     public void refetch() {
         post(new Runnable() {
             @Override
             public void run() {
-                HHDbAdapter.Wellbeing wellbeing = fetchWellbeing.fetch();
-                findViewById(R.id.wellbeing_status_text).setBackgroundColor(translateWellbeing(wellbeing));
-                invalidate();
+                if (fetchWellbeing != null) {
+                    HHDbAdapter.Wellbeing wellbeing = fetchWellbeing.fetch();
+                    findViewById(R.id.wellbeing_status_text).setBackgroundColor(translateWellbeing(wellbeing));
+                    invalidate();
+                }
             }
         });
     }

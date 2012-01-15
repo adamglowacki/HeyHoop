@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.gesture.*;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +15,7 @@ import android.widget.ImageView;
 import hey.hoop.animal.Animal;
 import hey.hoop.animal.Kangaroo;
 import hey.hoop.chartdroid.IntentConstants;
+import hey.hoop.custom_view.WellbeingStatusView;
 import hey.hoop.provider.DataForChartProvider;
 import hey.hoop.services.ServiceManager;
 
@@ -68,6 +68,35 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
         GESTURE_WALK = getResources().getString(R.string.gesture_walk);
         GESTURE_BED = getResources().getString(R.string.gesture_bed);
         dbAdapter = new HHDbAdapter(this);
+        WellbeingStatusView foodStatus = (WellbeingStatusView) findViewById(R.id.food_status);
+        foodStatus.setText(R.string.food_wellbeing);
+        foodStatus.setFetchWellbeing(new
+                WellbeingStatusView.FetchWellbeing() {
+                    @Override
+                    public HHDbAdapter.Wellbeing fetch() {
+                        return dbAdapter.howNourished();
+                    }
+                });
+        WellbeingStatusView drinkStatus = (WellbeingStatusView) findViewById(R.id.drink_status);
+        drinkStatus.setText(R.string.drink_wellbeing);
+        drinkStatus.setFetchWellbeing
+                (new WellbeingStatusView
+                        .FetchWellbeing() {
+                    @Override
+                    public HHDbAdapter.Wellbeing fetch() {
+                        return dbAdapter.howWatered();
+                    }
+                });
+        WellbeingStatusView walkStatus = (WellbeingStatusView) findViewById(R.id.walk_status);
+        walkStatus.setText(R.string.walk_wellbeing);
+        walkStatus.setFetchWellbeing(new
+                WellbeingStatusView.FetchWellbeing
+                        () {
+                    @Override
+                    public HHDbAdapter.Wellbeing fetch() {
+                        return dbAdapter.howWalked();
+                    }
+                });
     }
 
     private void callInvalidateOptionsMenu() {
@@ -221,22 +250,9 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
     }
 
     private void refreshWellbeing() {
-        findViewById(R.id.food_wellbeing_text).setBackgroundColor(getColorForWellbeing(dbAdapter.howNourished()));
-        findViewById(R.id.drink_wellbeing_text).setBackgroundColor(getColorForWellbeing(dbAdapter.howWatered()));
-        findViewById(R.id.walk_wellbeing_text).setBackgroundColor(getColorForWellbeing(dbAdapter.howWalked()));
-    }
-
-    private int getColorForWellbeing(HHDbAdapter.Wellbeing wellbeing) {
-        switch (wellbeing) {
-            case GOOD:
-                return getResources().getColor(R.color.wellbeing_good);
-            case POOR:
-                return getResources().getColor(R.color.wellbeing_poor);
-            case FATAL:
-                return getResources().getColor(R.color.wellbeing_fatal);
-            default:
-                return Color.WHITE;
-        }
+        ((WellbeingStatusView) findViewById(R.id.food_status)).refetch();
+        ((WellbeingStatusView) findViewById(R.id.drink_status)).refetch();
+        ((WellbeingStatusView) findViewById(R.id.walk_status)).refetch();
     }
 
     private void configWalk() {
