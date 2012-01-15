@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import hey.hoop.animal.Animal;
 import hey.hoop.animal.Kangaroo;
@@ -42,13 +43,12 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
 
     private HHDbAdapter dbAdapter;
 
-    private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
-    private static final long REFRESH_WELLBEING_INTERVAL = 5L;
-
+    private ScheduledThreadPoolExecutor wellbeingRefreshing;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND, WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
         setContentView(R.layout.main);
         setTitle(R.string.title);
         Animal.Executable menuInvalidator = new Animal.Executable() {
@@ -70,33 +70,28 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
         dbAdapter = new HHDbAdapter(this);
         WellbeingStatusView foodStatus = (WellbeingStatusView) findViewById(R.id.food_status);
         foodStatus.setText(R.string.food_wellbeing);
-        foodStatus.setFetchWellbeing(new
-                WellbeingStatusView.FetchWellbeing() {
-                    @Override
-                    public HHDbAdapter.Wellbeing fetch() {
-                        return dbAdapter.howNourished();
-                    }
-                });
+        foodStatus.setFetchWellbeing(new WellbeingStatusView.FetchWellbeing() {
+            @Override
+            public HHDbAdapter.Wellbeing fetch() {
+                return dbAdapter.howNourished();
+            }
+        });
         WellbeingStatusView drinkStatus = (WellbeingStatusView) findViewById(R.id.drink_status);
         drinkStatus.setText(R.string.drink_wellbeing);
-        drinkStatus.setFetchWellbeing
-                (new WellbeingStatusView
-                        .FetchWellbeing() {
-                    @Override
-                    public HHDbAdapter.Wellbeing fetch() {
-                        return dbAdapter.howWatered();
-                    }
-                });
+        drinkStatus.setFetchWellbeing(new WellbeingStatusView.FetchWellbeing() {
+            @Override
+            public HHDbAdapter.Wellbeing fetch() {
+                return dbAdapter.howWatered();
+            }
+        });
         WellbeingStatusView walkStatus = (WellbeingStatusView) findViewById(R.id.walk_status);
         walkStatus.setText(R.string.walk_wellbeing);
-        walkStatus.setFetchWellbeing(new
-                WellbeingStatusView.FetchWellbeing
-                        () {
-                    @Override
-                    public HHDbAdapter.Wellbeing fetch() {
-                        return dbAdapter.howWalked();
-                    }
-                });
+        walkStatus.setFetchWellbeing(new WellbeingStatusView.FetchWellbeing() {
+            @Override
+            public HHDbAdapter.Wellbeing fetch() {
+                return dbAdapter.howWalked();
+            }
+        });
     }
 
     private void callInvalidateOptionsMenu() {
@@ -115,9 +110,12 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
     @Override
     protected void onResume() {
         super.onResume();
+        /* Wellbeing status refresh */
+        final long REFRESH_INTERVAL = getResources().getInteger(R.integer.activity_wellbeing_refresh_interval);
+        final long INITIAL_DELAY = 500;
         mAnimal.resume();
-        scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1);
-        scheduledThreadPoolExecutor.scheduleWithFixedDelay(new Runnable() {
+        wellbeingRefreshing = new ScheduledThreadPoolExecutor(1);
+        wellbeingRefreshing.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
                 findViewById(R.id.wellbeing_layout).post(new Runnable() {
@@ -127,14 +125,14 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
                     }
                 });
             }
-        }, REFRESH_WELLBEING_INTERVAL, REFRESH_WELLBEING_INTERVAL, TimeUnit.SECONDS);
+        }, INITIAL_DELAY, REFRESH_INTERVAL, TimeUnit.MILLISECONDS);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mAnimal.pause();
-        scheduledThreadPoolExecutor.shutdown();
+        wellbeingRefreshing.shutdown();
     }
 
     @Override
@@ -192,48 +190,40 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(R.string.chartdroid_download_title)
                     .setMessage(R.string.chartdroid_download_message)
-                    .setPositiveButton(R.string.chartdroid_download_market,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    startActivity(Market.getMarketDownloadIntent(Market.CHARTDROID_PACKAGE_NAME));
-                                }
-                            })
-                    .setNeutralButton(R.string.chartdroid_download_web,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    startActivity(new Intent(Intent.ACTION_VIEW, Market.APK_DOWNLOAD_URI_CHARTDROID));
-                                }
-                            }).create();
+                    .setPositiveButton(R.string.chartdroid_download_market, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(Market.getMarketDownloadIntent(Market.CHARTDROID_PACKAGE_NAME));
+                        }
+                    })
+                    .setNeutralButton(R.string.chartdroid_download_web, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Market.APK_DOWNLOAD_URI_CHARTDROID));
+                        }
+                    }).create();
         else if (id == DIALOG_START_WALK)
             return new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .setTitle(R.string.dialog_walk_title)
                     .setMessage(R.string.dialog_walk_message_stopped)
-                    .setPositiveButton(R.string.dialog_walk_start,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    ServiceManager.startAndRegisterListener(HeyHoopActivity.this);
-                                }
-                            }).create();
+                    .setPositiveButton(R.string.dialog_walk_start, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ServiceManager.startAndRegisterListener(HeyHoopActivity.this);
+                        }
+                    }).create();
         else if (id == DIALOG_STOP_WALK)
             return new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .setTitle(R.string.dialog_walk_title)
                     .setMessage(R.string.dialog_walk_message_running)
-                    .setPositiveButton(R.string.dialog_walk_stop,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    ServiceManager.stopAndUnregisterListener(HeyHoopActivity.this);
-                                }
-                            }).create();
+                    .setPositiveButton(R.string.dialog_walk_stop, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ServiceManager.stopAndUnregisterListener(HeyHoopActivity.this);
+                        }
+                    }).create();
         else
             return null;
     }
@@ -241,8 +231,8 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
     @Override
     protected void onPrepareDialog(int id, Dialog dialog) {
         if (id == DIALOG_CHARTDROID_DOWNLOAD) {
-            boolean hasAndroidMarket = Market.isIntentAvailable(this, Market
-                    .getMarketDownloadIntent(Market.CHARTDROID_PACKAGE_NAME));
+            boolean hasAndroidMarket = Market.isIntentAvailable(this,
+                    Market.getMarketDownloadIntent(Market.CHARTDROID_PACKAGE_NAME));
             Log.d(TAG, "has android market? " + hasAndroidMarket);
             dialog.findViewById(android.R.id.button1).setVisibility(
                     hasAndroidMarket ? View.VISIBLE : View.GONE);
@@ -297,7 +287,7 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
             ArrayList<Prediction> predictions = mLibrary.recognize(gesture);
             if (predictions.size() > 0) {
                 Prediction stroke = findStrokeGesture(predictions);
-                if (stroke.score > STROKE_FAVOUR_SCORE)
+                if (stroke != null && stroke.score > STROKE_FAVOUR_SCORE)
                     mAnimal.stroke();
                 else {
                     Prediction theFirst = predictions.get(0);

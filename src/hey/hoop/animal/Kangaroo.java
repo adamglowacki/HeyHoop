@@ -7,6 +7,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
+import hey.hoop.HHDbAdapter;
 import hey.hoop.R;
 
 import java.util.Date;
@@ -21,15 +22,20 @@ public class Kangaroo implements Animal {
     private Random mRandom;
     private Executable mOnStateChange;
     private Vibrator mVibrator;
+    private HHDbAdapter mDbAdapter;
+
     private static final long[] WAKE_VIBRATIONS = {0, 300};
     private static final long[] BED_VIBRATIONS = {250, 400, 750, 400, 750, 400};
     private static final long[] STROKE_VIBRATIONS = {0, 200, 100, 200};
 
-    private boolean asleep;
-
     @Override
     public boolean isAsleep() {
-        return asleep;
+        mDbAdapter.open(false);
+        try {
+            return mDbAdapter.isBool(HHDbAdapter.ZZZ_BOOL);
+        } finally {
+            mDbAdapter.close();
+        }
     }
 
     public Kangaroo(Context ctx, ImageView window, ImageView artifact1, ImageView artifact2, ImageView artifact3,
@@ -41,8 +47,8 @@ public class Kangaroo implements Animal {
         this.mCentreArtifact2 = artifact3;
         this.mOnStateChange = onStateChange;
         mRandom = new Random(new Date().getTime());
-        asleep = false;
         mVibrator = (Vibrator) ctx.getSystemService(Context.VIBRATOR_SERVICE);
+        mDbAdapter = new HHDbAdapter(ctx);
     }
 
     @Override
@@ -51,11 +57,12 @@ public class Kangaroo implements Animal {
     }
 
     private void refresh() {
-        if (asleep)
+        if (isAsleep())
             mWindow.setImageResource(R.drawable.kangaroo_zzz);
         else
             mWindow.setImageResource(R.drawable.kangaroo_normal);
         mOnStateChange.execute();
+        mWindow.invalidate();
     }
 
     @Override
@@ -127,19 +134,32 @@ public class Kangaroo implements Animal {
         }
     }
 
+    private void setAsleepInDb(boolean toSleep) {
+        mDbAdapter.open(true);
+        try {
+            if (toSleep)
+                mDbAdapter.setBool(HHDbAdapter.ZZZ_BOOL);
+            else
+                mDbAdapter.unsetBool(HHDbAdapter.ZZZ_BOOL);
+        } finally {
+            mDbAdapter.close();
+        }
+    }
+
     @Override
     public void putToBed() {
         mVibrator.vibrate(BED_VIBRATIONS, -1);
         showToast(R.string.bed_thanks);
-        asleep = true;
+        setAsleepInDb(true);
         refresh();
+
     }
 
     @Override
     public void wakeUp() {
         mVibrator.vibrate(WAKE_VIBRATIONS, -1);
         showToast(R.string.bed_hello);
-        asleep = false;
+        setAsleepInDb(false);
         refresh();
     }
 

@@ -2,12 +2,12 @@ package hey.hoop.services;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import hey.hoop.HHDbAdapter;
 
 public class ServiceManager {
+
     public static boolean isListenerRunning(Context ctx) {
         ActivityManager manager = (ActivityManager) ctx
                 .getSystemService(Context.ACTIVITY_SERVICE);
@@ -24,18 +24,27 @@ public class ServiceManager {
         ctx.startService(service);
     }
 
+    private static void setListenerInstalled(Context ctx, boolean installed) {
+        HHDbAdapter dbAdapter = new HHDbAdapter(ctx);
+        dbAdapter.open(true);
+        try {
+            if (installed)
+                dbAdapter.setBool(HHDbAdapter.INSTALLED_BOOL);
+            else
+                dbAdapter.unsetBool(HHDbAdapter.INSTALLED_BOOL);
+        } finally {
+            dbAdapter.close();
+        }
+    }
+
     public static void startAndRegisterListener(Context ctx) {
         startListener(ctx);
-//        ctx.getPackageManager().setComponentEnabledSetting(
-//                new ComponentName(ctx, ServiceLaunchReceiver.class),
-//                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0);
+        setListenerInstalled(ctx, true);
     }
 
     public static void stopAndUnregisterListener(Context ctx) {
         Intent service = new Intent(ctx, ListenerService.class);
         ctx.stopService(service);
-//        ctx.getPackageManager().setComponentEnabledSetting(
-//                new ComponentName(ctx, ServiceLaunchReceiver.class),
-//                PackageManager.COMPONENT_ENABLED_STATE_DISABLED, 0);
+        setListenerInstalled(ctx, false);
     }
 }

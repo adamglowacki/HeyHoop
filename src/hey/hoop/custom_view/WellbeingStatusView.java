@@ -3,12 +3,12 @@ package hey.hoop.custom_view;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import hey.hoop.HHDbAdapter;
 import hey.hoop.R;
 
-public class WellbeingStatusView extends View {
+public class WellbeingStatusView extends RelativeLayout {
     private FetchWellbeing fetchWellbeing;
 
     public WellbeingStatusView(Context context) {
@@ -21,7 +21,7 @@ public class WellbeingStatusView extends View {
 
     public WellbeingStatusView(Context context, AttributeSet attributeSet, int defStyle) {
         super(context, attributeSet, defStyle);
-        inflate(context, R.layout.wellbeing_status, null);
+        inflate(context, R.layout.wellbeing_status, this);
     }
 
     public void setFetchWellbeing(FetchWellbeing fetch) {
@@ -36,13 +36,17 @@ public class WellbeingStatusView extends View {
         setText(getResources().getString(resId));
     }
 
+    private void setColor(int color) {
+        findViewById(R.id.wellbeing_status_text).setBackgroundColor(color);
+    }
+
     public void refetch() {
         post(new Runnable() {
             @Override
             public void run() {
                 if (fetchWellbeing != null) {
                     HHDbAdapter.Wellbeing wellbeing = fetchWellbeing.fetch();
-                    findViewById(R.id.wellbeing_status_text).setBackgroundColor(translateWellbeing(wellbeing));
+                    setColor(translateWellbeing(wellbeing));
                     invalidate();
                 }
             }

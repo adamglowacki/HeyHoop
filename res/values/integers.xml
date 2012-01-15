@@ -1,3 +1,4 @@
 <resources>
-    <integer name="appwidget_refresh_interval">5000</integer>
+    <integer name="appwidget_refresh_interval">0</integer>
+    <integer name="activity_wellbeing_refresh_interval">5000</integer>
 </resources>

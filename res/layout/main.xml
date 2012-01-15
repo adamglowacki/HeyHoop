@@ -16,39 +16,19 @@
     <ImageView android:id="@+id/artifact3" android:layout_width="wrap_content" android:layout_height="wrap_content"
                android:layout_centerInParent="true"/>
     <LinearLayout android:id="@+id/wellbeing_layout" android:layout_height="wrap_content"
-                  android:layout_width="wrap_content"
-                  android:layout_alignParentRight="true" android:layout_alignParentTop="true"
-                  android:orientation="vertical">
-        <LinearLayout android:layout_height="wrap_content" android:layout_width="wrap_content"
-                      android:orientation="horizontal">
-            <TextView android:id="@+id/food_wellbeing_text" android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/food_wellbeing"/>
-            <android.widget.RatingBar android:id="@+id/food_wellbeing_star" android:layout_height="wrap_content"
-                                      android:layout_width="wrap_content"
-                                      android:numStars="1" android:max="3"/>
-        </LinearLayout>
-        <LinearLayout android:layout_height="wrap_content" android:layout_width="wrap_content"
-                      android:orientation="horizontal">
-            <TextView android:id="@+id/drink_wellbeing_text" android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/drink_wellbeing"
-                      android:textAppearance="@android:style/TextAppearance.Large"/>
-            <android.widget.RatingBar android:id="@+id/drink_wellbeing_star" android:layout_height="wrap_content"
-                                      android:layout_width="wrap_content"
-                                      android:numStars="1" android:max="3"/>
-        </LinearLayout>
-        <LinearLayout android:layout_height="wrap_content" android:layout_width="wrap_content"
-                      android:orientation="horizontal">
-            <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/walk_status"
-                                                      android:layout_height="wrap_content"
-                                                      android:layout_width="wrap_content"/>
-            <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/drink_status"
-                                                      android:layout_height="wrap_content"
-                                                      android:layout_width="wrap_content"/>
-            <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/food_status"
-                                                      android:layout_height="wrap_content"
-                                                      android:layout_width="wrap_content"/>
-        </LinearLayout>
+                  android:layout_width="wrap_content" android:layout_alignParentRight="true"
+                  android:layout_alignParentTop="true" android:orientation="vertical">
+        <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/walk_status"
+                                                  android:layout_height="wrap_content"
+                                                  android:layout_width="wrap_content"
+                                                  android:layout_gravity="center_horizontal"/>
+        <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/drink_status"
+                                                  android:layout_height="wrap_content"
+                                                  android:layout_width="wrap_content"
+                                                  android:layout_gravity="center_horizontal"/>
+        <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/food_status"
+                                                  android:layout_height="wrap_content"
+                                                  android:layout_width="wrap_content"
+                                                  android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 </RelativeLayout>

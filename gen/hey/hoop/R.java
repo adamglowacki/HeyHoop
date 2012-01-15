@@ -57,44 +57,43 @@ public final class R {
         public static final int ic_launcher=0x7f020016;
         public static final int kangaroo_normal=0x7f020017;
         public static final int kangaroo_zzz=0x7f020018;
+        public static final int transparent_background=0x7f02001c;
         public static final int wake=0x7f020019;
         public static final int walk=0x7f02001a;
         public static final int zzz=0x7f02001b;
     }
     public static final class id {
-        public static final int animalWindow=0x7f0c0005;
-        public static final int artifact1=0x7f0c0006;
-        public static final int artifact2=0x7f0c0007;
-        public static final int artifact3=0x7f0c0008;
-        public static final int bed=0x7f0c001a;
-        public static final int breakfast=0x7f0c0014;
-        public static final int carrot_juice=0x7f0c0019;
-        public static final int chartWalk=0x7f0c001d;
-        public static final int dateField=0x7f0c0003;
-        public static final int dinner=0x7f0c0015;
-        public static final int drink=0x7f0c0017;
-        public static final int drink_status=0x7f0c000f;
-        public static final int drink_wellbeing_star=0x7f0c000d;
-        public static final int drink_wellbeing_text=0x7f0c000c;
-        public static final int food=0x7f0c0013;
-        public static final int food_status=0x7f0c0010;
-        public static final int food_wellbeing_star=0x7f0c000b;
-        public static final int food_wellbeing_text=0x7f0c000a;
-        public static final int gesturesOverlay=0x7f0c0004;
-        public static final int idField=0x7f0c0001;
-        public static final int sleeping_related_group=0x7f0c0012;
-        public static final int supper=0x7f0c0016;
-        public static final int valueField=0x7f0c0002;
-        public static final int wake=0x7f0c001b;
-        public static final int walk=0x7f0c001c;
-        public static final int walkEntries=0x7f0c001e;
-        public static final int walk_status=0x7f0c000e;
-        public static final int water=0x7f0c0018;
-        public static final int wellbeing_layout=0x7f0c0009;
-        public static final int wellbeing_status_text=0x7f0c0011;
-        public static final int widget_animal_view=0x7f0c0000;
+        public static final int animalWindow=0x7f0d0006;
+        public static final int artifact1=0x7f0d0007;
+        public static final int artifact2=0x7f0d0008;
+        public static final int artifact3=0x7f0d0009;
+        public static final int bed=0x7f0d0017;
+        public static final int breakfast=0x7f0d0011;
+        public static final int carrot_juice=0x7f0d0016;
+        public static final int chartWalk=0x7f0d001a;
+        public static final int dateField=0x7f0d0004;
+        public static final int dinner=0x7f0d0012;
+        public static final int drink=0x7f0d0014;
+        public static final int drink_status=0x7f0d000c;
+        public static final int food=0x7f0d0010;
+        public static final int food_status=0x7f0d000d;
+        public static final int gesturesOverlay=0x7f0d0005;
+        public static final int idField=0x7f0d0002;
+        public static final int sleeping_related_group=0x7f0d000f;
+        public static final int supper=0x7f0d0013;
+        public static final int valueField=0x7f0d0003;
+        public static final int wake=0x7f0d0018;
+        public static final int walk=0x7f0d0019;
+        public static final int walkEntries=0x7f0d001b;
+        public static final int walk_status=0x7f0d000b;
+        public static final int water=0x7f0d0015;
+        public static final int wellbeing_layout=0x7f0d000a;
+        public static final int wellbeing_status_text=0x7f0d000e;
+        public static final int widget_animal_view=0x7f0d0000;
+        public static final int widget_button=0x7f0d0001;
     }
     public static final class integer {
+        public static final int activity_wellbeing_refresh_interval=0x7f090001;
         public static final int appwidget_refresh_interval=0x7f090000;
     }
     public static final class layout {
@@ -105,7 +104,7 @@ public final class R {
         public static final int wellbeing_status=0x7f030004;
     }
     public static final class menu {
-        public static final int main_menu=0x7f0b0000;
+        public static final int main_menu=0x7f0c0000;
     }
     public static final class raw {
         public static final int gestures=0x7f060000;
@@ -157,6 +156,10 @@ public final class R {
         public static final int walk_wellbeing=0x7f0a002d;
         public static final int water_item=0x7f0a0018;
         public static final int water_thanks=0x7f0a0025;
+        public static final int widget_button_text=0x7f0a002e;
+    }
+    public static final class style {
+        public static final int translucent_activity=0x7f0b0000;
     }
     public static final class xml {
         public static final int appwidget_info=0x7f050000;

@@ -45,5 +45,6 @@
     <string name="food_wellbeing">Food</string>
     <string name="drink_wellbeing">Drink</string>
     <string name="walk_wellbeing">Walk</string>
+    <string name="widget_button_text">Hello!</string>
 
 </resources>
