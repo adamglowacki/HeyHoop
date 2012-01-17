@@ -10,6 +10,7 @@ import hey.hoop.R;
 
 public class WellbeingStatusView extends RelativeLayout {
     private FetchWellbeing fetchWellbeing;
+    private HHDbAdapter mDbAdapter;
 
     public WellbeingStatusView(Context context) {
         this(context, null, 0);
@@ -22,6 +23,7 @@ public class WellbeingStatusView extends RelativeLayout {
     public WellbeingStatusView(Context context, AttributeSet attributeSet, int defStyle) {
         super(context, attributeSet, defStyle);
         inflate(context, R.layout.wellbeing_status, this);
+        mDbAdapter = new HHDbAdapter(context);
     }
 
     public void setFetchWellbeing(FetchWellbeing fetch) {
@@ -45,8 +47,12 @@ public class WellbeingStatusView extends RelativeLayout {
             @Override
             public void run() {
                 if (fetchWellbeing != null) {
-                    HHDbAdapter.Wellbeing wellbeing = fetchWellbeing.fetch();
-                    setColor(translateWellbeing(wellbeing));
+                    mDbAdapter.open(false);
+                    try {
+                        setColor(translateWellbeing(fetchWellbeing.fetch(mDbAdapter)));
+                    } finally {
+                        mDbAdapter.close();
+                    }
                     invalidate();
                 }
             }
@@ -67,6 +73,6 @@ public class WellbeingStatusView extends RelativeLayout {
     }
 
     public interface FetchWellbeing {
-        public HHDbAdapter.Wellbeing fetch();
+        public HHDbAdapter.Wellbeing fetch(HHDbAdapter dbAdapter);
     }
 }

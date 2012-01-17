@@ -22,8 +22,11 @@
     <item android:icon="@drawable/chart" android:title="@string/main_menu_charts">
         <menu>
             <item android:id="@+id/chartWalk" android:title="@string/chart_walk"/>
+            <item android:id="@+id/chartDrink" android:title="@string/chart_drink"/>
+            <item android:id="@+id/chartFood" android:title="@string/chart_food"/>
         </menu>
     </item>
     <item android:id="@+id/walkEntries" android:title="@string/main_menu_walk_entries"/>
+    <item android:id="@+id/openFaller" android:title="@string/main_menu_faller"/>
 
 </menu>

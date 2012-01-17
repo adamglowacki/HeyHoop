@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.gesture.*;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import hey.hoop.animal.Animal;
 import hey.hoop.animal.Kangaroo;
 import hey.hoop.chartdroid.IntentConstants;
 import hey.hoop.custom_view.WellbeingStatusView;
+import hey.hoop.faller.FallerActivity;
 import hey.hoop.provider.DataForChartProvider;
 import hey.hoop.services.ServiceManager;
 
@@ -40,8 +42,6 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
     private GestureLibrary mLibrary;
     private static final double STROKE_FAVOUR_SCORE = 5.0;
     private static final double ACCEPT_SCORE = 1.0;
-
-    private HHDbAdapter dbAdapter;
 
     private ScheduledThreadPoolExecutor wellbeingRefreshing;
 
@@ -67,12 +67,11 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
         GESTURE_STROKE = getResources().getString(R.string.gesture_stroke);
         GESTURE_WALK = getResources().getString(R.string.gesture_walk);
         GESTURE_BED = getResources().getString(R.string.gesture_bed);
-        dbAdapter = new HHDbAdapter(this);
         WellbeingStatusView foodStatus = (WellbeingStatusView) findViewById(R.id.food_status);
         foodStatus.setText(R.string.food_wellbeing);
         foodStatus.setFetchWellbeing(new WellbeingStatusView.FetchWellbeing() {
             @Override
-            public HHDbAdapter.Wellbeing fetch() {
+            public HHDbAdapter.Wellbeing fetch(HHDbAdapter dbAdapter) {
                 return dbAdapter.howNourished();
             }
         });
@@ -80,7 +79,7 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
         drinkStatus.setText(R.string.drink_wellbeing);
         drinkStatus.setFetchWellbeing(new WellbeingStatusView.FetchWellbeing() {
             @Override
-            public HHDbAdapter.Wellbeing fetch() {
+            public HHDbAdapter.Wellbeing fetch(HHDbAdapter dbAdapter) {
                 return dbAdapter.howWatered();
             }
         });
@@ -88,7 +87,7 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
         walkStatus.setText(R.string.walk_wellbeing);
         walkStatus.setFetchWellbeing(new WellbeingStatusView.FetchWellbeing() {
             @Override
-            public HHDbAdapter.Wellbeing fetch() {
+            public HHDbAdapter.Wellbeing fetch(HHDbAdapter dbAdapter) {
                 return dbAdapter.howWalked();
             }
         });
@@ -113,7 +112,7 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
         /* Wellbeing status refresh */
         final long REFRESH_INTERVAL = getResources().getInteger(R.integer.activity_wellbeing_refresh_interval);
         final long INITIAL_DELAY = 500;
-        mAnimal.resume();
+        mAnimal.resume(this);
         wellbeingRefreshing = new ScheduledThreadPoolExecutor(1);
         wellbeingRefreshing.scheduleWithFixedDelay(new Runnable() {
             @Override
@@ -168,16 +167,19 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
         } else if (id == R.id.carrot_juice) {
             mAnimal.drink(Animal.Drink.CARROT_JUICE);
         } else if (id == R.id.bed) {
-            mAnimal.putToBed();
+            mAnimal.putToBed(this);
         } else if (id == R.id.wake) {
-            mAnimal.wakeUp();
+            mAnimal.wakeUp(this);
         } else if (id == R.id.walk) {
             configWalk();
-        } else if (id == R.id.chartWalk) {
-            openWalkChart();
+        } else if (id == R.id.chartWalk || id == R.id.chartDrink || id == R.id.chartFood) {
+            openChart(id);
         } else if (id == R.id.walkEntries) {
             Intent viewEntriesIntent = new Intent(HeyHoopActivity.this, ListDbActivity.class);
             startActivity(viewEntriesIntent);
+        } else if (id == R.id.openFaller) {
+            Intent fallerIntent = new Intent(HeyHoopActivity.this, FallerActivity.class);
+            startActivity(fallerIntent);
         } else
             return super.onOptionsItemSelected(item);
         return true;
@@ -254,8 +256,15 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
             showDialog(DIALOG_START_WALK);
     }
 
-    private void openWalkChart() {
-        Intent openChartIntent = new Intent(Intent.ACTION_VIEW, DataForChartProvider.WALK_URI);
+    private void openChart(int menuItemId) {
+        Uri providerUri;
+        if (menuItemId == R.id.chartWalk)
+            providerUri = DataForChartProvider.WALK_URI;
+        else if (menuItemId == R.id.chartDrink)
+            providerUri = DataForChartProvider.DRINK_URI;
+        else /* only food can be */
+            providerUri = DataForChartProvider.FOOD_URI;
+        Intent openChartIntent = new Intent(Intent.ACTION_VIEW, providerUri);
         openChartIntent.addCategory(IntentConstants.CATEGORY_XY_CHART);
         if (Market.isIntentAvailable(HeyHoopActivity.this, openChartIntent))
             startActivity(openChartIntent);
@@ -274,7 +283,7 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
         if (GESTURE_STROKE.equals(name))
             mAnimal.stroke();
         else if (GESTURE_BED.equals(name))
-            mAnimal.putToBed();
+            mAnimal.putToBed(this);
         else if (GESTURE_WALK.equals(name))
             configWalk();
     }
@@ -282,7 +291,7 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
     @Override
     public void onGesturePerformed(GestureOverlayView gestureOverlayView, Gesture gesture) {
         if (mAnimal.isAsleep())
-            mAnimal.wakeUp();
+            mAnimal.wakeUp(this);
         else {
             ArrayList<Prediction> predictions = mLibrary.recognize(gesture);
             if (predictions.size() > 0) {

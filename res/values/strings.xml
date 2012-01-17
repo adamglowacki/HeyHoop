@@ -18,6 +18,15 @@
     <string name="chart_acceleration_x_axis_label">Time</string>
     <string name="chart_acceleration_y_axis_label">Acceleration magnitude</string>
     <string name="chart_acceleration_title">Last 24h</string>
+    <string name="chart_food_x_axis_label">Time</string>
+    <string name="chart_food_y_axis_label"></string>
+    <string name="chart_food_breakfast_title">Breakfast</string>
+    <string name="chart_food_dinner_title">Dinner</string>
+    <string name="chart_food_supper_title">Supper</string>
+    <string name="chart_drink_x_axis_label">Time</string>
+    <string name="chart_drink_y_axis_label">Amount</string>
+    <string name="chart_drink_water_title">Water</string>
+    <string name="chart_drink_carrot_juice_title">Carrot juice</string>
     <string name="main_menu_food">Food</string>
     <string name="breakfast_item">Breakfast</string>
     <string name="dinner_item">Dinner</string>
@@ -30,7 +39,10 @@
     <string name="main_menu_walk">Walk-meter</string>
     <string name="main_menu_charts">Charts</string>
     <string name="main_menu_walk_entries">Walk entries</string>
+    <string name="main_menu_faller">Faller</string>
     <string name="chart_walk">Walk</string>
+    <string name="chart_drink">Drink</string>
+    <string name="chart_food">Food</string>
     <string name="walk_track_started">Walk-tracking started</string>
     <string name="walk_track_stopped">Walk-tracking stopped</string>
     <string name="breakfast_thanks">I love breakfast!</string>

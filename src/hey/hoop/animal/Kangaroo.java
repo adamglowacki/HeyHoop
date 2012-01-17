@@ -1,6 +1,7 @@
 package hey.hoop.animal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.animation.Animation;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import hey.hoop.HHDbAdapter;
 import hey.hoop.R;
+import hey.hoop.appwidget.WidgetProvider;
 
 import java.util.Date;
 import java.util.Random;
@@ -52,17 +54,18 @@ public class Kangaroo implements Animal {
     }
 
     @Override
-    public void resume() {
-        refresh();
+    public void resume(Context ctx) {
+        refresh(ctx);
     }
 
-    private void refresh() {
+    private void refresh(Context ctx) {
         if (isAsleep())
             mWindow.setImageResource(R.drawable.kangaroo_zzz);
         else
             mWindow.setImageResource(R.drawable.kangaroo_normal);
         mOnStateChange.execute();
         mWindow.invalidate();
+        updateWidget(ctx);
     }
 
     @Override
@@ -116,22 +119,44 @@ public class Kangaroo implements Animal {
             default:
                 showToast(R.string.unknown_food_thanks);
         }
+        mDbAdapter.open(true);
+        try {
+            mDbAdapter.registerEating(meal.name());
+        } finally {
+            mDbAdapter.close();
+        }
     }
 
     @Override
     public void drink(Drink drink) {
+        float amount;
         switch (drink) {
             case WATER:
                 slideIn(R.drawable.big_drink);
                 showToast(R.string.water_thanks);
+                amount = mRandom.nextFloat() / 2 + 1;
                 break;
             case CARROT_JUICE:
                 slideIn(R.drawable.big_drink);
                 showToast(R.string.carrot_juice_thanks);
+                amount = mRandom.nextFloat() / 3 + 0.75f;
                 break;
             default:
                 showToast(R.string.unknown_drink_thanks);
+                amount = 1;
         }
+        mDbAdapter.open(true);
+        try {
+            mDbAdapter.registerDrinking(drink.name(), amount);
+        } finally {
+            mDbAdapter.close();
+        }
+    }
+
+    private void updateWidget(Context ctx) {
+        Intent intent = new Intent(WidgetProvider.APPWIDGET_UPDATE);
+        ctx.sendBroadcast(intent);
+
     }
 
     private void setAsleepInDb(boolean toSleep) {
@@ -147,20 +172,20 @@ public class Kangaroo implements Animal {
     }
 
     @Override
-    public void putToBed() {
+    public void putToBed(Context ctx) {
         mVibrator.vibrate(BED_VIBRATIONS, -1);
         showToast(R.string.bed_thanks);
         setAsleepInDb(true);
-        refresh();
+        refresh(ctx);
 
     }
 
     @Override
-    public void wakeUp() {
+    public void wakeUp(Context ctx) {
         mVibrator.vibrate(WAKE_VIBRATIONS, -1);
         showToast(R.string.bed_hello);
         setAsleepInDb(false);
-        refresh();
+        refresh(ctx);
     }
 
     @Override

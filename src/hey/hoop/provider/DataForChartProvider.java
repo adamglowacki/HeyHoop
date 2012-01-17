@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import hey.hoop.HHDbAdapter;
 import hey.hoop.R;
+import hey.hoop.animal.Animal;
 import hey.hoop.chartdroid.ColumnSchema;
 
 public class DataForChartProvider extends ContentProvider {
@@ -55,10 +56,14 @@ public class DataForChartProvider extends ContentProvider {
         String type = uri.getQueryParameter(TYPE_PARAMETER);
         if (WALK.equals(type))
             return queryWalk(uri, r);
+        else if (FOOD.equals(type))
+            return queryFood(uri, r);
+        else if (DRINK.equals(type))
+            return queryDrink(uri, r);
         else
             return null;
     }
-    
+
     private Cursor queryWalk(Uri uri, Resources r) {
         String aspect = uri
                 .getQueryParameter(ColumnSchema.DATASET_ASPECT_PARAMETER);
@@ -92,6 +97,102 @@ public class DataForChartProvider extends ContentProvider {
                 ++row_index;
                 mc.newRow().add(row_index).add(ColumnSchema.X_AXIS_INDEX)
                         .add(0).add(c.getInt(2)).add(null);
+                ++row_index;
+            }
+            dbAdapter.close();
+            return mc;
+        }
+    }
+
+    private Cursor queryFood(Uri uri, Resources r) {
+        String aspect = uri.getQueryParameter(ColumnSchema.DATASET_ASPECT_PARAMETER);
+        if (ColumnSchema.Aspect.DATASET_ASPECT_AXES.equals(aspect)) {
+            MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID,
+                    ColumnSchema.Aspect.Axes.COLUMN_AXIS_LABEL});
+            c.newRow().add(0).add(r.getString(R.string.chart_food_x_axis_label));
+            c.newRow().add(1).add(r.getString(R.string.chart_food_y_axis_label));
+            return c;
+        } else if (ColumnSchema.Aspect.DATASET_ASPECT_SERIES.equals(aspect)) {
+            MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID,
+                    ColumnSchema.Aspect.Series.COLUMN_SERIES_LABEL});
+            c.newRow().add(0).add(r.getString(R.string.chart_food_breakfast_title));
+            c.newRow().add(1).add(r.getString(R.string.chart_food_dinner_title));
+            c.newRow().add(2).add(r.getString(R.string.chart_food_supper_title));
+            return c;
+        } else {
+            /* data */
+            MatrixCursor mc = new MatrixCursor(new String[]{BaseColumns._ID,
+                    ColumnSchema.Aspect.Data.COLUMN_AXIS_INDEX,
+                    ColumnSchema.Aspect.Data.COLUMN_SERIES_INDEX,
+                    ColumnSchema.Aspect.Data.COLUMN_DATUM_VALUE,
+                    ColumnSchema.Aspect.Data.COLUMN_DATUM_LABEL});
+            dbAdapter.open(false);
+            Cursor c = dbAdapter.fetchFood();
+            int row_index = 0;
+            while (c.moveToNext()) {
+                int mealType;
+                switch (Animal.Meal.valueOf(c.getString(1))) {
+                    case BREAKFAST:
+                        mealType = 0;
+                        break;
+                    case DINNER:
+                        mealType = 1;
+                        break;
+                    case SUPPER:
+                        mealType = 2;
+                        break;
+                    default:
+                        mealType = 0;
+                }
+                mc.newRow().add(row_index).add(ColumnSchema.Y_AXIS_INDEX).add(mealType).add(1.0 + mealType).add(null);
+                ++row_index;
+                mc.newRow().add(row_index).add(ColumnSchema.X_AXIS_INDEX).add(mealType).add(c.getInt(2)).add(null);
+                ++row_index;
+            }
+            dbAdapter.close();
+            return mc;
+        }
+    }
+
+    private Cursor queryDrink(Uri uri, Resources r) {
+        String aspect = uri.getQueryParameter(ColumnSchema.DATASET_ASPECT_PARAMETER);
+        if (ColumnSchema.Aspect.DATASET_ASPECT_AXES.equals(aspect)) {
+            MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID,
+                    ColumnSchema.Aspect.Axes.COLUMN_AXIS_LABEL});
+            c.newRow().add(0).add(r.getString(R.string.chart_drink_x_axis_label));
+            c.newRow().add(1).add(r.getString(R.string.chart_drink_y_axis_label));
+            return c;
+        } else if (ColumnSchema.Aspect.DATASET_ASPECT_SERIES.equals(aspect)) {
+            MatrixCursor c = new MatrixCursor(new String[]{BaseColumns._ID,
+                    ColumnSchema.Aspect.Series.COLUMN_SERIES_LABEL});
+            c.newRow().add(0).add(r.getString(R.string.chart_drink_water_title));
+            c.newRow().add(1).add(r.getString(R.string.chart_drink_carrot_juice_title));
+            return c;
+        } else {
+            /* data */
+            MatrixCursor mc = new MatrixCursor(new String[]{BaseColumns._ID,
+                    ColumnSchema.Aspect.Data.COLUMN_AXIS_INDEX,
+                    ColumnSchema.Aspect.Data.COLUMN_SERIES_INDEX,
+                    ColumnSchema.Aspect.Data.COLUMN_DATUM_VALUE,
+                    ColumnSchema.Aspect.Data.COLUMN_DATUM_LABEL});
+            dbAdapter.open(false);
+            Cursor c = dbAdapter.fetchDrink();
+            int row_index = 0;
+            while (c.moveToNext()) {
+                int drinkType;
+                switch (Animal.Drink.valueOf(c.getString(1))) {
+                    case WATER:
+                        drinkType = 0;
+                        break;
+                    case CARROT_JUICE:
+                        drinkType = 1;
+                        break;
+                    default:
+                        drinkType = 0;
+                }
+                mc.newRow().add(row_index).add(ColumnSchema.Y_AXIS_INDEX).add(drinkType).add(c.getFloat(2)).add(null);
+                ++row_index;
+                mc.newRow().add(row_index).add(ColumnSchema.X_AXIS_INDEX).add(drinkType).add(c.getInt(3)).add(null);
                 ++row_index;
             }
             dbAdapter.close();
