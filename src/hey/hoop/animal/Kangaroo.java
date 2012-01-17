@@ -1,7 +1,8 @@
 package hey.hoop.animal;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Vibrator;
 import android.view.Gravity;
 import android.view.animation.Animation;
@@ -154,9 +155,10 @@ public class Kangaroo implements Animal {
     }
 
     private void updateWidget(Context ctx) {
-        Intent intent = new Intent(WidgetProvider.APPWIDGET_UPDATE);
-        ctx.sendBroadcast(intent);
-
+        WidgetProvider widgetProvider = new WidgetProvider();
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(ctx);
+        ComponentName componentName = new ComponentName(ctx, WidgetProvider.class);
+        widgetProvider.onUpdate(ctx, appWidgetManager, appWidgetManager.getAppWidgetIds(componentName));
     }
 
     private void setAsleepInDb(boolean toSleep) {

@@ -1,18 +1,20 @@
 package hey.hoop.faller;
 
 import android.content.Context;
-import android.hardware.SensorManager;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
-public class FallerSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
+public class FallerSurfaceView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
     private Context mContext;
     private FallerDrawer mDrawer;
 
     public FallerSurfaceView(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
 
+        setOnTouchListener(this);
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         mDrawer = new FallerDrawer(ctx, surfaceHolder);
@@ -26,6 +28,7 @@ public class FallerSurfaceView extends SurfaceView implements SurfaceHolder.Call
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         mDrawer.setSurfaceReady(true);
         mDrawer.start();
+
     }
 
     @Override
@@ -45,16 +48,13 @@ public class FallerSurfaceView extends SurfaceView implements SurfaceHolder.Call
         }
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasWindowFocus) {
-        /* ... */
-    }
-
     public void pause() {
         mDrawer.pause();
     }
 
-    public void resume() {
-        mDrawer.resume();
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        mDrawer.unpause();
+        return true;
     }
 }

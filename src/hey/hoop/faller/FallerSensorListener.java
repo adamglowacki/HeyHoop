@@ -7,7 +7,7 @@ import android.hardware.SensorManager;
 import android.util.Log;
 
 public class FallerSensorListener extends Thread implements SensorEventListener {
-    private static final long MAX_SLEEP_TIME = 30000;
+    private static final long MAX_SLEEP_TIME = 2000;
     private static final String TAG = FallerSensorListener.class.getCanonicalName();
 
     private SensorManager mSensorManager;
@@ -26,8 +26,7 @@ public class FallerSensorListener extends Thread implements SensorEventListener 
     public void run() {
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mGeomagneticFieldMeter = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(this, mGeomagneticFieldMeter, SensorManager.SENSOR_DELAY_NORMAL);
+        unpause();
         while (mNeeded) {
             try {
                 Thread.sleep(MAX_SLEEP_TIME);
@@ -39,6 +38,15 @@ public class FallerSensorListener extends Thread implements SensorEventListener 
 
     public void setNeeded(boolean needed) {
         mNeeded = needed;
+    }
+
+    public void pause() {
+        mSensorManager.unregisterListener(this);
+    }
+
+    public void unpause() {
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mGeomagneticFieldMeter, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override

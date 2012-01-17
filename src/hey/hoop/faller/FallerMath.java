@@ -1,8 +1,33 @@
 package hey.hoop.faller;
 
 public final class FallerMath {
-    public static float sqr(float x) {
-        return x * x;
+    /**
+     * If <code>v</code> is outside range [<code>start</code>, <code>end</code>], it is moved to the nearest boundary
+     * . <code>tmp</code> should be <code>null</code> or be of length > 0. If <code>tmp</code> is not
+     * <code>null</code> then <code>tmp[0]</code> says if <code>v</code> has been changed.
+     *
+     * @param v     The value to be changed.
+     * @param start The first number of the range.
+     * @param end   The last number of the range.
+     * @param tmp   Indicator if <code>v</code> has been changed.
+     * @return New value of <code>v</code>.
+     */
+    public static float putIntoRange(float v, float start, float end, boolean[] tmp) {
+        if (tmp != null) {
+            assert tmp.length > 0;
+            tmp[0] = false;
+        }
+        if (v < start || v > end) {
+            if (tmp != null)
+                tmp[0] = true;
+            if (v < start) v = start;
+            else v = end;
+        }
+        return v;
+    }
+
+    public static float sqr(float v) {
+        return v * v;
     }
 
     public static float decreaseAbsValue(float v) {

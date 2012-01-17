@@ -27,7 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ListDbActivity"/>
         <activity android:name=".faller.FallerActivity"/>
 
         <receiver android:name=".services.ServiceLaunchReceiver">

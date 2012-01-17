@@ -174,9 +174,6 @@ public class HeyHoopActivity extends Activity implements GestureOverlayView.OnGe
             configWalk();
         } else if (id == R.id.chartWalk || id == R.id.chartDrink || id == R.id.chartFood) {
             openChart(id);
-        } else if (id == R.id.walkEntries) {
-            Intent viewEntriesIntent = new Intent(HeyHoopActivity.this, ListDbActivity.class);
-            startActivity(viewEntriesIntent);
         } else if (id == R.id.openFaller) {
             Intent fallerIntent = new Intent(HeyHoopActivity.this, FallerActivity.class);
             startActivity(fallerIntent);

@@ -64,36 +64,32 @@ public final class R {
         public static final int zzz=0x7f02001c;
     }
     public static final class id {
-        public static final int animalWindow=0x7f0d0007;
-        public static final int artifact1=0x7f0d0008;
-        public static final int artifact2=0x7f0d0009;
-        public static final int artifact3=0x7f0d000a;
-        public static final int bed=0x7f0d0018;
-        public static final int breakfast=0x7f0d0012;
-        public static final int carrot_juice=0x7f0d0017;
-        public static final int chartDrink=0x7f0d001c;
-        public static final int chartFood=0x7f0d001d;
-        public static final int chartWalk=0x7f0d001b;
-        public static final int dateField=0x7f0d0004;
-        public static final int dinner=0x7f0d0013;
-        public static final int drink=0x7f0d0015;
-        public static final int drink_status=0x7f0d000d;
-        public static final int faller_view=0x7f0d0005;
-        public static final int food=0x7f0d0011;
-        public static final int food_status=0x7f0d000e;
-        public static final int gesturesOverlay=0x7f0d0006;
-        public static final int idField=0x7f0d0002;
-        public static final int openFaller=0x7f0d001f;
-        public static final int sleeping_related_group=0x7f0d0010;
-        public static final int supper=0x7f0d0014;
-        public static final int valueField=0x7f0d0003;
-        public static final int wake=0x7f0d0019;
-        public static final int walk=0x7f0d001a;
-        public static final int walkEntries=0x7f0d001e;
-        public static final int walk_status=0x7f0d000c;
-        public static final int water=0x7f0d0016;
-        public static final int wellbeing_layout=0x7f0d000b;
-        public static final int wellbeing_status_text=0x7f0d000f;
+        public static final int animalWindow=0x7f0d0004;
+        public static final int artifact1=0x7f0d0005;
+        public static final int artifact2=0x7f0d0006;
+        public static final int artifact3=0x7f0d0007;
+        public static final int bed=0x7f0d0015;
+        public static final int breakfast=0x7f0d000f;
+        public static final int carrot_juice=0x7f0d0014;
+        public static final int chartDrink=0x7f0d0019;
+        public static final int chartFood=0x7f0d001a;
+        public static final int chartWalk=0x7f0d0018;
+        public static final int dinner=0x7f0d0010;
+        public static final int drink=0x7f0d0012;
+        public static final int drink_status=0x7f0d000a;
+        public static final int faller_view=0x7f0d0002;
+        public static final int food=0x7f0d000e;
+        public static final int food_status=0x7f0d000b;
+        public static final int gesturesOverlay=0x7f0d0003;
+        public static final int openFaller=0x7f0d001b;
+        public static final int sleeping_related_group=0x7f0d000d;
+        public static final int supper=0x7f0d0011;
+        public static final int wake=0x7f0d0016;
+        public static final int walk=0x7f0d0017;
+        public static final int walk_status=0x7f0d0009;
+        public static final int water=0x7f0d0013;
+        public static final int wellbeing_layout=0x7f0d0008;
+        public static final int wellbeing_status_text=0x7f0d000c;
         public static final int widget_animal_view=0x7f0d0000;
         public static final int widget_button=0x7f0d0001;
     }
@@ -103,11 +99,9 @@ public final class R {
     }
     public static final class layout {
         public static final int appwidget=0x7f030000;
-        public static final int db_list=0x7f030001;
-        public static final int entry_row=0x7f030002;
-        public static final int faller=0x7f030003;
-        public static final int main=0x7f030004;
-        public static final int wellbeing_status=0x7f030005;
+        public static final int faller=0x7f030001;
+        public static final int main=0x7f030002;
+        public static final int wellbeing_status=0x7f030003;
     }
     public static final class menu {
         public static final int main_menu=0x7f0c0000;
@@ -150,6 +144,8 @@ public final class R {
         public static final int dinner_item=0x7f0a001e;
         public static final int dinner_thanks=0x7f0a002f;
         public static final int drink_wellbeing=0x7f0a0038;
+        public static final int faller_paused_text=0x7f0a003b;
+        public static final int faller_title=0x7f0a003c;
         public static final int food_wellbeing=0x7f0a0037;
         public static final int gesture_bed=0x7f0a0002;
         public static final int gesture_stroke=0x7f0a0000;

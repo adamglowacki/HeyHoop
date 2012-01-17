@@ -26,7 +26,6 @@
             <item android:id="@+id/chartFood" android:title="@string/chart_food"/>
         </menu>
     </item>
-    <item android:id="@+id/walkEntries" android:title="@string/main_menu_walk_entries"/>
     <item android:id="@+id/openFaller" android:title="@string/main_menu_faller"/>
 
 </menu>
