@@ -13,9 +13,17 @@ public final class R {
         public static final int shake=0x7f040001;
         public static final int slide=0x7f040002;
     }
+    public static final class array {
+        public static final int faller_preference_goal_number_readable=0x7f0b0000;
+        public static final int faller_preference_goal_number_values=0x7f0b0001;
+    }
     public static final class attr {
     }
     public static final class color {
+        public static final int faller_accident_background=0x7f070008;
+        public static final int faller_clock=0x7f070005;
+        public static final int faller_paused=0x7f070006;
+        public static final int faller_usual_background=0x7f070007;
         public static final int gesture_recognized=0x7f070000;
         public static final int gesture_unknown=0x7f070001;
         public static final int wellbeing_fatal=0x7f070004;
@@ -26,6 +34,15 @@ public final class R {
         public static final int appwidget_minheight=0x7f080005;
         public static final int appwidget_minwidth=0x7f080004;
         public static final int artifact1_bottom_margin=0x7f080003;
+        public static final int faller_acceleration_scale=0x7f08000f;
+        public static final int faller_clock_margin=0x7f080008;
+        public static final int faller_clock_text=0x7f080007;
+        public static final int faller_goal_angle_speed_change=0x7f08000c;
+        public static final int faller_goal_radius=0x7f080009;
+        public static final int faller_goal_speed_max=0x7f08000a;
+        public static final int faller_goal_speed_min=0x7f08000b;
+        public static final int faller_paused_text=0x7f08000d;
+        public static final int faller_resistance_scale=0x7f08000e;
         public static final int id_gap=0x7f080001;
         public static final int list_row_margin=0x7f080000;
         public static final int value_gap=0x7f080002;
@@ -57,40 +74,41 @@ public final class R {
         public static final int faller_background=0x7f020016;
         public static final int faller_ic=0x7f020017;
         public static final int food=0x7f020018;
-        public static final int hh_ic=0x7f020019;
-        public static final int ic_launcher=0x7f02001a;
-        public static final int kangaroo_normal=0x7f02001b;
-        public static final int kangaroo_zzz=0x7f02001c;
-        public static final int transparent_background=0x7f020020;
-        public static final int wake=0x7f02001d;
-        public static final int walk=0x7f02001e;
-        public static final int zzz=0x7f02001f;
+        public static final int goal=0x7f020019;
+        public static final int hh_ic=0x7f02001a;
+        public static final int ic_launcher=0x7f02001b;
+        public static final int kangaroo_normal=0x7f02001c;
+        public static final int kangaroo_zzz=0x7f02001d;
+        public static final int wake=0x7f02001e;
+        public static final int walk=0x7f02001f;
+        public static final int zzz=0x7f020020;
     }
     public static final class id {
         public static final int animalWindow=0x7f0d0004;
         public static final int artifact1=0x7f0d0005;
         public static final int artifact2=0x7f0d0006;
         public static final int artifact3=0x7f0d0007;
-        public static final int bed=0x7f0d0015;
-        public static final int breakfast=0x7f0d000f;
-        public static final int carrot_juice=0x7f0d0014;
-        public static final int chartDrink=0x7f0d0019;
-        public static final int chartFood=0x7f0d001a;
-        public static final int chartWalk=0x7f0d0018;
-        public static final int dinner=0x7f0d0010;
-        public static final int drink=0x7f0d0012;
+        public static final int bed=0x7f0d0016;
+        public static final int breakfast=0x7f0d0010;
+        public static final int carrot_juice=0x7f0d0015;
+        public static final int chartDrink=0x7f0d001a;
+        public static final int chartFood=0x7f0d001b;
+        public static final int chartWalk=0x7f0d0019;
+        public static final int dinner=0x7f0d0011;
+        public static final int drink=0x7f0d0013;
         public static final int drink_status=0x7f0d000a;
+        public static final int faller_preferences_menu_item=0x7f0d000d;
         public static final int faller_view=0x7f0d0002;
-        public static final int food=0x7f0d000e;
+        public static final int food=0x7f0d000f;
         public static final int food_status=0x7f0d000b;
         public static final int gesturesOverlay=0x7f0d0003;
-        public static final int openFaller=0x7f0d001b;
-        public static final int sleeping_related_group=0x7f0d000d;
-        public static final int supper=0x7f0d0011;
-        public static final int wake=0x7f0d0016;
-        public static final int walk=0x7f0d0017;
+        public static final int openFaller=0x7f0d001c;
+        public static final int sleeping_related_group=0x7f0d000e;
+        public static final int supper=0x7f0d0012;
+        public static final int wake=0x7f0d0017;
+        public static final int walk=0x7f0d0018;
         public static final int walk_status=0x7f0d0009;
-        public static final int water=0x7f0d0013;
+        public static final int water=0x7f0d0014;
         public static final int wellbeing_layout=0x7f0d0008;
         public static final int wellbeing_status_text=0x7f0d000c;
         public static final int widget_animal_view=0x7f0d0000;
@@ -107,78 +125,93 @@ public final class R {
         public static final int wellbeing_status=0x7f030003;
     }
     public static final class menu {
-        public static final int main_menu=0x7f0c0000;
+        public static final int faller=0x7f0c0000;
+        public static final int main_menu=0x7f0c0001;
     }
     public static final class raw {
         public static final int gestures=0x7f060000;
     }
     public static final class string {
-        public static final int app_name=0x7f0a0003;
-        public static final int bed_hello=0x7f0a0036;
-        public static final int bed_thanks=0x7f0a0035;
-        public static final int breakfast_item=0x7f0a001d;
-        public static final int breakfast_thanks=0x7f0a002e;
-        public static final int carrot_juice_item=0x7f0a0022;
-        public static final int carrot_juice_thanks=0x7f0a0032;
-        public static final int chart_acceleration_title=0x7f0a0012;
-        public static final int chart_acceleration_x_axis_label=0x7f0a0010;
-        public static final int chart_acceleration_y_axis_label=0x7f0a0011;
-        public static final int chart_drink=0x7f0a002a;
-        public static final int chart_drink_carrot_juice_title=0x7f0a001b;
-        public static final int chart_drink_water_title=0x7f0a001a;
-        public static final int chart_drink_x_axis_label=0x7f0a0018;
-        public static final int chart_drink_y_axis_label=0x7f0a0019;
-        public static final int chart_food=0x7f0a002b;
-        public static final int chart_food_breakfast_title=0x7f0a0015;
-        public static final int chart_food_dinner_title=0x7f0a0016;
-        public static final int chart_food_supper_title=0x7f0a0017;
-        public static final int chart_food_x_axis_label=0x7f0a0013;
-        public static final int chart_food_y_axis_label=0x7f0a0014;
-        public static final int chart_walk=0x7f0a0029;
-        public static final int chartdroid_download_market=0x7f0a0009;
-        public static final int chartdroid_download_message=0x7f0a0008;
-        public static final int chartdroid_download_title=0x7f0a0007;
-        public static final int chartdroid_download_web=0x7f0a000a;
-        public static final int dialog_walk_message_running=0x7f0a000c;
-        public static final int dialog_walk_message_stopped=0x7f0a000d;
-        public static final int dialog_walk_start=0x7f0a000e;
-        public static final int dialog_walk_stop=0x7f0a000f;
-        public static final int dialog_walk_title=0x7f0a000b;
-        public static final int dinner_item=0x7f0a001e;
-        public static final int dinner_thanks=0x7f0a002f;
-        public static final int drink_wellbeing=0x7f0a0038;
-        public static final int faller_paused_text=0x7f0a003b;
-        public static final int faller_title=0x7f0a003c;
-        public static final int food_wellbeing=0x7f0a0037;
+        public static final int app_name=0x7f0a000a;
+        public static final int bed_hello=0x7f0a003d;
+        public static final int bed_thanks=0x7f0a003c;
+        public static final int breakfast_item=0x7f0a0024;
+        public static final int breakfast_thanks=0x7f0a0035;
+        public static final int carrot_juice_item=0x7f0a0029;
+        public static final int carrot_juice_thanks=0x7f0a0039;
+        public static final int chart_acceleration_title=0x7f0a0019;
+        public static final int chart_acceleration_x_axis_label=0x7f0a0017;
+        public static final int chart_acceleration_y_axis_label=0x7f0a0018;
+        public static final int chart_drink=0x7f0a0031;
+        public static final int chart_drink_carrot_juice_title=0x7f0a0022;
+        public static final int chart_drink_water_title=0x7f0a0021;
+        public static final int chart_drink_x_axis_label=0x7f0a001f;
+        public static final int chart_drink_y_axis_label=0x7f0a0020;
+        public static final int chart_food=0x7f0a0032;
+        public static final int chart_food_breakfast_title=0x7f0a001c;
+        public static final int chart_food_dinner_title=0x7f0a001d;
+        public static final int chart_food_supper_title=0x7f0a001e;
+        public static final int chart_food_x_axis_label=0x7f0a001a;
+        public static final int chart_food_y_axis_label=0x7f0a001b;
+        public static final int chart_walk=0x7f0a0030;
+        public static final int chartdroid_download_market=0x7f0a0010;
+        public static final int chartdroid_download_message=0x7f0a000f;
+        public static final int chartdroid_download_title=0x7f0a000e;
+        public static final int chartdroid_download_web=0x7f0a0011;
+        public static final int dialog_walk_message_running=0x7f0a0013;
+        public static final int dialog_walk_message_stopped=0x7f0a0014;
+        public static final int dialog_walk_start=0x7f0a0015;
+        public static final int dialog_walk_stop=0x7f0a0016;
+        public static final int dialog_walk_title=0x7f0a0012;
+        public static final int dinner_item=0x7f0a0025;
+        public static final int dinner_thanks=0x7f0a0036;
+        public static final int drink_wellbeing=0x7f0a003f;
+        /** This looks stupid. It is because ListPreference does not allow list entries to be different than strings.
+         */
+        public static final int faller_default_goal_number=0x7f0a004b;
+        public static final int faller_paused_text=0x7f0a0042;
+        public static final int faller_preference_acceleration_scale_factor=0x7f0a0005;
+        public static final int faller_preference_decrease_acceleration=0x7f0a0009;
+        public static final int faller_preference_decrease_acceleration_summary_off=0x7f0a0047;
+        public static final int faller_preference_decrease_acceleration_summary_on=0x7f0a0046;
+        public static final int faller_preference_decrease_acceleration_title=0x7f0a0045;
+        public static final int faller_preference_goal_angle_change_speed=0x7f0a0006;
+        public static final int faller_preference_goal_number=0x7f0a0003;
+        public static final int faller_preference_goal_number_dialog_title=0x7f0a0048;
+        public static final int faller_preference_goal_number_summary=0x7f0a004a;
+        public static final int faller_preference_goal_number_title=0x7f0a0049;
+        public static final int faller_preference_goal_speed_max=0x7f0a0007;
+        public static final int faller_preference_goal_speed_min=0x7f0a0008;
+        public static final int faller_preference_resistance_scale_factor=0x7f0a0004;
+        public static final int faller_preferences=0x7f0a0044;
+        public static final int faller_title=0x7f0a0043;
+        public static final int food_wellbeing=0x7f0a003e;
         public static final int gesture_bed=0x7f0a0002;
         public static final int gesture_stroke=0x7f0a0000;
         public static final int gesture_walk=0x7f0a0001;
-        public static final int main_menu_bed=0x7f0a0023;
-        public static final int main_menu_charts=0x7f0a0026;
-        public static final int main_menu_drink=0x7f0a0020;
-        public static final int main_menu_faller=0x7f0a0028;
-        public static final int main_menu_food=0x7f0a001c;
-        public static final int main_menu_wake=0x7f0a0024;
-        public static final int main_menu_walk=0x7f0a0025;
-        public static final int main_menu_walk_entries=0x7f0a0027;
-        public static final int no_entries=0x7f0a0006;
-        public static final int provider_name=0x7f0a0005;
-        public static final int supper_item=0x7f0a001f;
-        public static final int supper_thanks=0x7f0a0030;
-        public static final int title=0x7f0a0004;
-        public static final int unknown_drink_thanks=0x7f0a0034;
-        public static final int unknown_food_thanks=0x7f0a0033;
-        public static final int walk_track_started=0x7f0a002c;
-        public static final int walk_track_stopped=0x7f0a002d;
-        public static final int walk_wellbeing=0x7f0a0039;
-        public static final int water_item=0x7f0a0021;
-        public static final int water_thanks=0x7f0a0031;
-        public static final int widget_button_text=0x7f0a003a;
-    }
-    public static final class style {
-        public static final int translucent_activity=0x7f0b0000;
+        public static final int main_menu_bed=0x7f0a002a;
+        public static final int main_menu_charts=0x7f0a002d;
+        public static final int main_menu_drink=0x7f0a0027;
+        public static final int main_menu_faller=0x7f0a002f;
+        public static final int main_menu_food=0x7f0a0023;
+        public static final int main_menu_wake=0x7f0a002b;
+        public static final int main_menu_walk=0x7f0a002c;
+        public static final int main_menu_walk_entries=0x7f0a002e;
+        public static final int no_entries=0x7f0a000d;
+        public static final int provider_name=0x7f0a000c;
+        public static final int supper_item=0x7f0a0026;
+        public static final int supper_thanks=0x7f0a0037;
+        public static final int title=0x7f0a000b;
+        public static final int unknown_drink_thanks=0x7f0a003b;
+        public static final int unknown_food_thanks=0x7f0a003a;
+        public static final int walk_track_started=0x7f0a0033;
+        public static final int walk_track_stopped=0x7f0a0034;
+        public static final int walk_wellbeing=0x7f0a0040;
+        public static final int water_item=0x7f0a0028;
+        public static final int water_thanks=0x7f0a0038;
+        public static final int widget_button_text=0x7f0a0041;
     }
     public static final class xml {
-        public static final int appwidget_info=0x7f050000;
+        public static final int faller_preferences=0x7f050000;
     }
 }

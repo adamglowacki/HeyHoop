@@ -1,8 +1,11 @@
 <resources>
-    <drawable name="transparent_background">#30ffffff</drawable>
     <color name="gesture_recognized">#40ffff00</color>
     <color name="gesture_unknown">#10ffff00</color>
-    <color name="wellbeing_good">#99006400</color>
-    <color name="wellbeing_poor">#99c8c800</color>
-    <color name="wellbeing_fatal">#99640000</color>
+    <color name="wellbeing_good">#ff006400</color>
+    <color name="wellbeing_poor">#ffc8c800</color>
+    <color name="wellbeing_fatal">#ff640000</color>
+    <color name="faller_clock">#ffffffff</color>
+    <color name="faller_paused">#ffffffff</color>
+    <color name="faller_usual_background">#ff505050</color>
+    <color name="faller_accident_background">#ffff0000</color>
 </resources>

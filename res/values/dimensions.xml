@@ -8,5 +8,14 @@
     <dimen name="appwidget_minwidth">110dp</dimen>
     <dimen name="appwidget_minheight">40dp</dimen>
     <dimen name="wellbeing_status_text_padding">10dp</dimen>
+    <dimen name="faller_clock_text">20dp</dimen>
+    <dimen name="faller_clock_margin">30dp</dimen>
+    <dimen name="faller_goal_radius">50px</dimen>
+    <dimen name="faller_goal_speed_max">0.5px</dimen>
+    <dimen name="faller_goal_speed_min">0.1px</dimen>
+    <dimen name="faller_goal_angle_speed_change">0.6px</dimen>
+    <dimen name="faller_paused_text">20dp</dimen>
+    <dimen name="faller_resistance_scale">0.08px</dimen>
+    <dimen name="faller_acceleration_scale">0.15px</dimen>
 
 </resources>

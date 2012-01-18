@@ -60,5 +60,29 @@
     <string name="widget_button_text">Hello!</string>
     <string name="faller_paused_text">Touch to resume</string>
     <string name="faller_title">HeyHoop Faller</string>
+    <string name="faller_preferences">Configure</string>
+    <string-array name="faller_preference_goal_number_readable">
+        <item>Very little (1)</item>
+        <item>Pretty little (2)</item>
+        <item>Normal (3)</item>
+        <item>Many (5)</item>
+        <item>Overcrowded (7)</item>
+    </string-array>
+    <string-array name="faller_preference_goal_number_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>7</item>
+    </string-array>
+    <string name="faller_preference_decrease_acceleration_title">Acceleration decrease</string>
+    <string name="faller_preference_decrease_acceleration_summary_on">Acceleration is being decreased</string>
+    <string name="faller_preference_decrease_acceleration_summary_off">Acceleration is left unchanged</string>
+    <string name="faller_preference_goal_number_dialog_title">Edit yellow planes</string>
+    <string name="faller_preference_goal_number_title">Yellow planes</string>
+    <string name="faller_preference_goal_number_summary">How many yellow planes fly</string>
+
+    <!--This looks stupid. It is because ListPreference does not allow list entries to be different than strings.-->
+    <string name="faller_default_goal_number">2</string>
 
 </resources>

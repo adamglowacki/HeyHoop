@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.preference.CheckBoxPreference android:key="@string/faller_preference_decrease_acceleration"
+                                           android:title="@string/faller_preference_decrease_acceleration_title"
+                                           android:defaultValue="false"
+                                           android:summaryOn="@string/faller_preference_decrease_acceleration_summary_on"
+                                           android:summaryOff="@string/faller_preference_decrease_acceleration_summary_off"/>
+    <android.preference.ListPreference android:key="@string/faller_preference_goal_number"
+                                       android:dialogTitle="@string/faller_preference_goal_number_dialog_title"
+                                       android:title="@string/faller_preference_goal_number_title"
+                                       android:summary="@string/faller_preference_goal_number_summary"
+                                       android:entries="@array/faller_preference_goal_number_readable"
+                                       android:entryValues="@array/faller_preference_goal_number_values"/>
+</PreferenceScreen>

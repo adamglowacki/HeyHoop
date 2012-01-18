@@ -57,4 +57,25 @@
     <string name="widget_button_text">Cześć!</string>
     <string name="faller_paused_text">Dotknij, aby wznowić</string>
     <string name="faller_title">HeyHoop Faller</string>
+    <string name="faller_preferences">Konfiguracja</string>
+    <string-array name="faller_preference_goal_number_readable">
+        <item>Bardzo mało (1)</item>
+        <item>Raczej mało (2)</item>
+        <item>Tak sobie (3)</item>
+        <item>Sporo (5)</item>
+        <item>Tłok (7)</item>
+    </string-array>
+    <string-array name="faller_preference_goal_number_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>7</item>
+    </string-array>
+    <string name="faller_preference_decrease_acceleration_title">Zmniejszenie przyspieszenia</string>
+    <string name="faller_preference_decrease_acceleration_summary_on">Przyspieszenie jest zmniejszane</string>
+    <string name="faller_preference_decrease_acceleration_summary_off">Przyspieszenie nie jest zmniejszane</string>
+    <string name="faller_preference_goal_number_dialog_title">Zmień żółte samoloty</string>
+    <string name="faller_preference_goal_number_title">Żółte samoloty</string>
+    <string name="faller_preference_goal_number_summary">Ilość żółtych samolotów</string>
 </resources>

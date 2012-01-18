@@ -11,6 +11,7 @@ import hey.hoop.R;
 public class WellbeingStatusView extends RelativeLayout {
     private FetchWellbeing fetchWellbeing;
     private HHDbAdapter mDbAdapter;
+    private TextView mStatus;
 
     public WellbeingStatusView(Context context) {
         this(context, null, 0);
@@ -24,6 +25,7 @@ public class WellbeingStatusView extends RelativeLayout {
         super(context, attributeSet, defStyle);
         inflate(context, R.layout.wellbeing_status, this);
         mDbAdapter = new HHDbAdapter(context);
+        mStatus = (TextView) findViewById(R.id.wellbeing_status_text);
     }
 
     public void setFetchWellbeing(FetchWellbeing fetch) {
@@ -39,7 +41,7 @@ public class WellbeingStatusView extends RelativeLayout {
     }
 
     private void setColor(int color) {
-        findViewById(R.id.wellbeing_status_text).setBackgroundColor(color);
+        mStatus.setTextColor(color);
     }
 
     public void refetch() {

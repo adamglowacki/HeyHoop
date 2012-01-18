@@ -1,6 +1,8 @@
 package hey.hoop.faller;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.*;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -12,23 +14,10 @@ import java.util.concurrent.CountDownLatch;
 
 import static android.util.FloatMath.cos;
 import static android.util.FloatMath.sin;
-import static hey.hoop.faller.FallerMath.putIntoRange;
-import static hey.hoop.faller.FallerMath.sqr;
-import static java.lang.Math.PI;
-import static java.lang.Math.atan2;
+import static hey.hoop.faller.FallerMath.*;
+import static java.lang.Math.min;
 
 public class FallerDrawer implements Runnable {
-    private static final float ACCELERATION_SCALE_FACTOR = 0.15f;
-    private static final float RESISTANCE_SCALE_FACTOR = 0.08f;
-    private static final float GOAL_RADIUS = 30;
-    private static final float GOAL_OUTER_RADIUS = GOAL_RADIUS + 10;
-    private static final float CLOCK_MARGIN = 50;
-    private static final float CLOCK_TEXT_SIZE = 40;
-    private static final float GOAL_SPEED_MAX = 0.5f;
-    private static final float GOAL_SPEED_MIN = 0.1f;
-    private static final float GOAL_SPEED_CHANGE_ANGLE = (float) Math.PI / 4;
-    private static final float PAUSED_TEXT_SIZE = 40;
-
     private static final String SAVED_X = "x";
     private static final String SAVED_Y = "y";
     private static final String SAVED_ANIMAL_ANGLE = "mAnimalAngle";
@@ -40,7 +29,19 @@ public class FallerDrawer implements Runnable {
     private static final String SAVED_GOAL_SPEED_Y = "goalSpeedY";
     private static final String SAVED_ACCIDENT = "mAccident";
     private static final String SAVED_ACCIDENTS_TIME = "mAccidentsTime";
+    private static final String SAVED_DECREASE_ACCELERATION = "mDecreaseAcceleration";
+    private static final String SAVED_RESISTANCE_SCALE_FACTOR = "mResistanceScaleFactor";
+    private static final String SAVED_ACCELERATION_SCALE_FACTOR = "mAccelerationScaleFactor";
+    private static final String SAVED_GOAL_ANGLE = "goalAngle";
+    private static final String SAVED_GOAL_ANGLE_CHANGE_SPEED = "mGoalAngleChangeSpeed";
 
+    private String mPreferenceGoalNumber;
+    private String mPreferenceResistanceScaleFactor;
+    private String mPreferenceAccelerationScaleFactor;
+    private String mPreferenceGoalAngleChangeSpeed;
+    private String mPreferenceGoalSpeedMax;
+    private String mPreferenceGoalSpeedMin;
+    private String mPreferenceDecreaseAcceleration;
 
     private final SurfaceHolder mSurfaceHolder;
     private boolean mSurfaceReady;
@@ -48,7 +49,7 @@ public class FallerDrawer implements Runnable {
     private Bitmap mBackground;
     private Bitmap mScaledBackground;
     private Bitmap mAnimal;
-    private Paint mGoalPaint;
+    private Bitmap mGoal;
     private Paint mClockPaint;
     private Paint mPausedPaint;
     private String mPausedText;
@@ -61,42 +62,49 @@ public class FallerDrawer implements Runnable {
     private float mGeomagnetic[];
     private FallerSensorListener mSensorListener;
     private long mAccidentsTime;
+    private int mUsualBackground;
+    private int mAccidentBackground;
 
     private boolean mDecreaseAcceleration = false;
-    private float mResistanceScaleFactor = RESISTANCE_SCALE_FACTOR;
-    private float mAccelerationScaleFactor = ACCELERATION_SCALE_FACTOR;
+    private float mResistanceScaleFactor;
+    private float mAccelerationScaleFactor;
+    private int mGoalNumber;
+    private float mGoalAngleChangeSpeed;
+    private float mGoalSpeedMax;
+    private float mGoalSpeedMin;
+    private float mClockMargin;
+    private float mGoalRadius;
 
     private float x;
     private float y;
     private float mAnimalAngle;
     private float dx;
     private float dy;
-    private float goalX;
-    private float goalY;
-    private float goalSpeedX;
-    private float goalSpeedY;
+    private float[] goalX;
+    private float[] goalY;
+    private float[] goalSpeedX;
+    private float[] goalSpeedY;
+    private float[] goalAngle;
     private boolean mAccident;
     private Random mRandom;
     private boolean mPaused;
     private boolean mSurfaceSizeObtained;
     private CountDownLatch mCountDown;
-    Matrix mAnimalTransformationMatrix;
 
     public FallerDrawer(Context ctx, SurfaceHolder surfaceHolder) {
+        Resources r = ctx.getResources();
         mSurfaceHolder = surfaceHolder;
-        mBackground = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.faller_background);
-        mAnimal = BitmapFactory.decodeResource(ctx.getResources(), R.drawable.animal);
-        mAnimalTransformationMatrix = new Matrix();
-        mGoalPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mGoalPaint.setARGB(255, 200, 200, 0);
-        mGoalPaint.setStrokeWidth(4);
-        mGoalPaint.setStyle(Paint.Style.STROKE);
+        mBackground = BitmapFactory.decodeResource(r, R.drawable.faller_background);
+        mAnimal = BitmapFactory.decodeResource(r, R.drawable.animal);
+        mGoal = BitmapFactory.decodeResource(r, R.drawable.goal);
+        mUsualBackground = r.getColor(R.color.faller_usual_background);
+        mAccidentBackground = r.getColor(R.color.faller_accident_background);
         mClockPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mClockPaint.setARGB(255, 0, 0, 0);
-        mClockPaint.setTextSize(CLOCK_TEXT_SIZE);
+        mClockPaint.setColor(r.getColor(R.color.faller_clock));
+        mClockPaint.setTextSize(r.getDimension(R.dimen.faller_clock_text));
         mPausedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPausedPaint.setARGB(255, 255, 255, 255);
-        mPausedPaint.setTextSize(PAUSED_TEXT_SIZE);
+        mPausedPaint.setColor(r.getColor(R.color.faller_paused));
+        mPausedPaint.setTextSize(r.getDimension(R.dimen.faller_paused_text));
         mGravity = new float[3];
         mGeomagnetic = new float[3];
         SensorManager sensorManager = (SensorManager) ctx.getSystemService(Context.SENSOR_SERVICE);
@@ -104,6 +112,15 @@ public class FallerDrawer implements Runnable {
         mRandom = new Random();
         mPausedText = ctx.getResources().getString(R.string.faller_paused_text);
         mSurfaceSizeObtained = false;
+        mGoalRadius = r.getDimension(R.dimen.faller_goal_radius);
+        mClockMargin = r.getDimension(R.dimen.faller_clock_margin);
+        mPreferenceAccelerationScaleFactor = r.getString(R.string.faller_preference_acceleration_scale_factor);
+        mPreferenceResistanceScaleFactor = r.getString(R.string.faller_preference_resistance_scale_factor);
+        mPreferenceDecreaseAcceleration = r.getString(R.string.faller_preference_decrease_acceleration);
+        mPreferenceGoalNumber = r.getString(R.string.faller_preference_goal_number);
+        mPreferenceGoalAngleChangeSpeed = r.getString(R.string.faller_preference_goal_angle_change_speed);
+        mPreferenceGoalSpeedMin = r.getString(R.string.faller_preference_goal_speed_min);
+        mPreferenceGoalSpeedMax = r.getString(R.string.faller_preference_goal_speed_max);
         mCountDown = new CountDownLatch(1);
     }
 
@@ -128,12 +145,17 @@ public class FallerDrawer implements Runnable {
                 map.putFloat(SAVED_ANIMAL_ANGLE, mAnimalAngle);
                 map.putFloat(SAVED_DX, dx);
                 map.putFloat(SAVED_DY, dy);
-                map.putFloat(SAVED_GOAL_X, goalX);
-                map.putFloat(SAVED_GOAL_Y, goalY);
-                map.putFloat(SAVED_GOAL_SPEED_X, goalSpeedX);
-                map.putFloat(SAVED_GOAL_SPEED_Y, goalSpeedY);
+                map.putFloatArray(SAVED_GOAL_X, goalX);
+                map.putFloatArray(SAVED_GOAL_Y, goalY);
+                map.putFloatArray(SAVED_GOAL_SPEED_X, goalSpeedX);
+                map.putFloatArray(SAVED_GOAL_SPEED_Y, goalSpeedY);
+                map.putFloatArray(SAVED_GOAL_ANGLE, goalAngle);
                 map.putBoolean(SAVED_ACCIDENT, mAccident);
                 map.putLong(SAVED_ACCIDENTS_TIME, mAccidentsTime);
+                map.putBoolean(SAVED_DECREASE_ACCELERATION, mDecreaseAcceleration);
+                map.putFloat(SAVED_RESISTANCE_SCALE_FACTOR, mResistanceScaleFactor);
+                map.putFloat(SAVED_ACCELERATION_SCALE_FACTOR, mAccelerationScaleFactor);
+                map.putFloat(SAVED_GOAL_ANGLE_CHANGE_SPEED, mGoalAngleChangeSpeed);
             }
         return map;
     }
@@ -145,12 +167,21 @@ public class FallerDrawer implements Runnable {
             mAnimalAngle = map.getFloat(SAVED_ANIMAL_ANGLE);
             dx = map.getFloat(SAVED_DX);
             dy = map.getFloat(SAVED_DY);
-            goalX = map.getFloat(SAVED_GOAL_X);
-            goalY = map.getFloat(SAVED_GOAL_Y);
-            goalSpeedX = map.getFloat(SAVED_GOAL_SPEED_X);
-            goalSpeedY = map.getFloat(SAVED_GOAL_SPEED_Y);
+            goalX = map.getFloatArray(SAVED_GOAL_X);
+            goalY = map.getFloatArray(SAVED_GOAL_Y);
+            goalSpeedX = map.getFloatArray(SAVED_GOAL_SPEED_X);
+            goalSpeedY = map.getFloatArray(SAVED_GOAL_SPEED_Y);
+            goalAngle = map.getFloatArray(SAVED_GOAL_ANGLE);
+            mGoalNumber = goalX.length;
+            assert goalY.length == mGoalNumber;
+            assert goalSpeedX.length == mGoalNumber;
+            assert goalSpeedY.length == mGoalNumber;
             mAccident = map.getBoolean(SAVED_ACCIDENT);
             mAccidentsTime = map.getLong(SAVED_ACCIDENTS_TIME);
+            mDecreaseAcceleration = map.getBoolean(SAVED_DECREASE_ACCELERATION);
+            mResistanceScaleFactor = map.getFloat(SAVED_RESISTANCE_SCALE_FACTOR);
+            mAccelerationScaleFactor = map.getFloat(SAVED_ACCELERATION_SCALE_FACTOR);
+            mGoalAngleChangeSpeed = map.getFloat(SAVED_GOAL_ANGLE_CHANGE_SPEED);
             mCountDown.countDown();
         }
     }
@@ -202,6 +233,12 @@ public class FallerDrawer implements Runnable {
             }
     }
 
+    /* Assuming that the object is pointing currently (0, -1) and wants to be (vectorX, vectorY). */
+    private float getDesiredRotationAngle(float vectorX, float vectorY) {
+        float desiredAngle = findAngle(vectorX, vectorY);
+        return normAngle(desiredAngle + 90);
+    }
+
     private void updateSituation(float[] orientation, long timestamp) {
         long elapsed = timestamp - mLastTimestamp;
         float accelerationX = -orientation[0] * mAccelerationScaleFactor;
@@ -211,7 +248,8 @@ public class FallerDrawer implements Runnable {
             accelerationX = FallerMath.decreaseAbsValue(accelerationX);
             accelerationY = FallerMath.decreaseAbsValue(accelerationY);
         }
-//        { /* make it more similar to each other */
+
+        //        { /* make it more similar to each other */
 //            float absAccelerationX = abs(accelerationX);
 //            float absAccelerationY = abs(accelerationY);
 //            if (absAccelerationX < absAccelerationY)
@@ -219,12 +257,12 @@ public class FallerDrawer implements Runnable {
 //            else
 //                accelerationX = copySign(absAccelerationX + absAccelerationY, accelerationX);
 //        }
-        float accelerationAngle = findAngle(accelerationX, accelerationY);
-        mAnimalAngle = normAngle(accelerationAngle + 90);
+        mAnimalAngle = getDesiredRotationAngle(accelerationX, accelerationY);
         { /* introduce resistance */
             accelerationX -= mResistanceScaleFactor * dx;
             accelerationY -= mResistanceScaleFactor * dy;
         }
+
         dx += accelerationX * elapsed;
         dy += accelerationY * elapsed;
         x += dx * elapsed;
@@ -236,45 +274,53 @@ public class FallerDrawer implements Runnable {
         y = putIntoRange(y, 0, mCanvasHeight, tmp);
         if (tmp[0])
             dy = 0;
-        if (mRandom.nextBoolean() && mRandom.nextBoolean()) {
-            float angle = (mRandom.nextBoolean() ? -1 : 1) * mRandom.nextFloat() * GOAL_SPEED_CHANGE_ANGLE;
-            float sinus = sin(angle), cosinus = cos(angle);
-            float a = goalSpeedX, b = goalSpeedY;
-            goalSpeedX = a * cosinus - b * sinus;
-            goalSpeedY = b * cosinus + a * sinus;
+        mAccident = false;
+        for (int i = 0; i < mGoalNumber; ++i) {
+            if (mRandom.nextBoolean() && mRandom.nextBoolean()) {
+                float angle = (mRandom.nextBoolean() ? -1 : 1) * mRandom.nextFloat() * mGoalAngleChangeSpeed;
+                float sine = sin(angle), cosine = cos(angle);
+                float a = goalSpeedX[i], b = goalSpeedY[i];
+                goalSpeedX[i] = a * cosine - b * sine;
+                goalSpeedY[i] = b * cosine + a * sine;
+                goalAngle[i] = getDesiredRotationAngle(goalSpeedX[i], goalSpeedY[i]);
+            }
+            goalX[i] += goalSpeedX[i] * elapsed;
+            goalY[i] += goalSpeedY[i] * elapsed;
+            goalX[i] = putIntoRange(goalX[i], 0, mCanvasWidth, null);
+            goalY[i] = putIntoRange(goalY[i], 0, mCanvasHeight, null);
+            mAccident |= sqr(x - goalX[i]) + sqr(y - goalY[i]) < sqr(mGoalRadius);
         }
-        goalX += goalSpeedX * elapsed;
-        goalY += goalSpeedY * elapsed;
-        goalX = putIntoRange(goalX, 0, mCanvasWidth, null);
-        goalY = putIntoRange(goalY, 0, mCanvasHeight, null);
-        mAccident = sqr(x - goalX) + sqr(y - goalY) < sqr(GOAL_RADIUS);
         if (mAccident)
             mAccidentsTime += elapsed;
     }
 
     private void redraw(Canvas canvas) {
         if (mAccident)
-            canvas.drawRGB(255, 0, 0);
+            canvas.drawColor(mAccidentBackground);
         else
-            canvas.drawRGB(100, 0, 0);
+            canvas.drawColor(mUsualBackground);
         canvas.drawBitmap(mScaledBackground, 0, 0, null);
-        canvas.drawCircle(goalX, goalY, GOAL_RADIUS, mGoalPaint);
-        canvas.drawLine(goalX, goalY - GOAL_OUTER_RADIUS, goalX, goalY + GOAL_OUTER_RADIUS, mGoalPaint);
-        canvas.drawLine(goalX - GOAL_OUTER_RADIUS, goalY, goalX + GOAL_OUTER_RADIUS, goalY, mGoalPaint);
-        mAnimalTransformationMatrix.setRotate(mAnimalAngle, mAnimal.getWidth() / 2, mAnimal.getHeight() / 2);
-        canvas.save();
-        canvas.translate(x - mAnimal.getWidth() / 2, y - mAnimal.getHeight() / 2);
-        canvas.drawBitmap(mAnimal, mAnimalTransformationMatrix, null);
-        canvas.restore();
+        for (int i = 0; i < mGoalNumber; ++i)
+            drawPlane(canvas, goalX[i], goalY[i], goalAngle[i], mGoal);
+        drawPlane(canvas, x, y, mAnimalAngle, mAnimal);
         String clockText = Integer.toString(Math.round(mAccidentsTime) / 1000);
         Rect bounds = new Rect();
         mClockPaint.getTextBounds(clockText, 0, clockText.length(), bounds);
-        canvas.drawText(clockText, mCanvasWidth - bounds.width() - CLOCK_MARGIN, CLOCK_MARGIN, mClockPaint);
+        canvas.drawText(clockText, mCanvasWidth - bounds.width() - mClockMargin, mClockMargin, mClockPaint);
         if (mPaused) {
             mPausedPaint.getTextBounds(mPausedText, 0, mPausedText.length(), bounds);
             canvas.drawText(mPausedText, (mCanvasWidth - bounds.width()) / 2, (mCanvasHeight - bounds.height()) / 2,
                     mPausedPaint);
         }
+    }
+
+    private void drawPlane(Canvas canvas, float planeX, float planeY, float planeAngle, Bitmap image) {
+        canvas.save();
+        Matrix rotation = new Matrix();
+        rotation.setRotate(planeAngle, image.getWidth() / 2, image.getHeight() / 2);
+        canvas.translate(planeX - image.getWidth() / 2, planeY - image.getHeight() / 2);
+        canvas.drawBitmap(image, rotation, null);
+        canvas.restore();
     }
 
     public void setSurfaceReady(boolean ready) {
@@ -286,20 +332,13 @@ public class FallerDrawer implements Runnable {
             mCanvasWidth = width;
             mCanvasHeight = height;
             mScaledBackground = Bitmap.createScaledBitmap(mBackground, mCanvasWidth, mCanvasHeight, true);
-        }
-        if (!mSurfaceSizeObtained) {
-            /* signal the first configuration */
-            mSurfaceSizeObtained = true;
-            synchronized (mSurfaceHolder) {
-                x = mRandom.nextInt(mCanvasWidth);
-                y = mRandom.nextInt(mCanvasHeight);
-                goalX = mRandom.nextInt(mCanvasWidth);
-                goalY = mRandom.nextInt(mCanvasHeight);
-                goalSpeedX = 0;
-                goalSpeedY = mRandom.nextFloat() * (GOAL_SPEED_MAX - GOAL_SPEED_MIN) + GOAL_SPEED_MIN;
+            if (!mSurfaceSizeObtained) {
+                /* signal the first configuration */
+                mSurfaceSizeObtained = true;
+                generateRandomSituation();
                 mPaused = true;
+                mCountDown.countDown();
             }
-            mCountDown.countDown();
         }
     }
 
@@ -311,14 +350,52 @@ public class FallerDrawer implements Runnable {
         mGeomagnetic = newGeomagnetic;
     }
 
-    private float findAngle(float a, float b) {
-        return (float) (atan2(b, a) * 180 / PI);
+    public void configure(SharedPreferences sharedPref, Resources r) {
+        synchronized (mSurfaceHolder) {
+            mGoalNumber = Integer.valueOf(sharedPref.getString(mPreferenceGoalNumber,
+                    r.getString(R.string.faller_default_goal_number)));
+            mDecreaseAcceleration = sharedPref.getBoolean(mPreferenceDecreaseAcceleration, false);
+            mResistanceScaleFactor = sharedPref.getFloat(mPreferenceResistanceScaleFactor,
+                    r.getDimension(R.dimen.faller_resistance_scale));
+            mAccelerationScaleFactor = sharedPref.getFloat(mPreferenceAccelerationScaleFactor,
+                    r.getDimension(R.dimen.faller_acceleration_scale));
+            mGoalAngleChangeSpeed = sharedPref.getFloat(mPreferenceGoalAngleChangeSpeed,
+                    r.getDimension(R.dimen.faller_goal_angle_speed_change));
+            mGoalSpeedMin = sharedPref.getFloat(mPreferenceGoalSpeedMin,
+                    r.getDimension(R.dimen.faller_goal_speed_min));
+            mGoalSpeedMax = sharedPref.getFloat(mPreferenceGoalSpeedMax,
+                    r.getDimension(R.dimen.faller_goal_speed_max));
+            if (mSurfaceSizeObtained && mGoalNumber > goalX.length) {
+                float[] oldGoalX = goalX, oldGoalY = goalY;
+                float[] oldGoalSpeedX = goalSpeedX, oldGoalSpeedY = goalSpeedY;
+                float[] oldGoalAngle = goalAngle;
+                generateRandomSituation();
+                copyArrayPrefix(oldGoalX, goalX);
+                copyArrayPrefix(oldGoalY, goalY);
+                copyArrayPrefix(oldGoalSpeedX, goalSpeedX);
+                copyArrayPrefix(oldGoalSpeedY, goalSpeedY);
+                copyArrayPrefix(oldGoalAngle, goalAngle);
+            }
+        }
     }
 
-    private float normAngle(float alpha) {
-        alpha = alpha % 360;
-        if (alpha < 0)
-            alpha += 360;
-        return alpha;
+    private void generateRandomSituation() {
+        x = mRandom.nextInt(mCanvasWidth);
+        y = mRandom.nextInt(mCanvasHeight);
+        goalX = new float[mGoalNumber];
+        goalY = new float[mGoalNumber];
+        goalSpeedX = new float[mGoalNumber];
+        goalSpeedY = new float[mGoalNumber];
+        goalAngle = new float[mGoalNumber];
+        for (int i = 0; i < mGoalNumber; ++i) {
+            goalX[i] = mRandom.nextInt(mCanvasWidth);
+            goalY[i] = mRandom.nextInt(mCanvasHeight);
+            goalSpeedX[i] = 0;
+            goalSpeedY[i] = mRandom.nextFloat() * (mGoalSpeedMax - mGoalSpeedMin) + mGoalSpeedMin;
+        }
+    }
+
+    private void copyArrayPrefix(float[] in, float[] out) {
+        System.arraycopy(in, 0, out, 0, min(in.length, out.length));
     }
 }

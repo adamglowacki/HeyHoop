@@ -2,4 +2,11 @@
     <string name="gesture_stroke">stroke</string>
     <string name="gesture_walk">walk</string>
     <string name="gesture_bed">bed</string>
+    <string name="faller_preference_goal_number">mGoalNumber</string>
+    <string name="faller_preference_resistance_scale_factor">mResistanceScaleFactor</string>
+    <string name="faller_preference_acceleration_scale_factor">mAccelerationScaleFactor</string>
+    <string name="faller_preference_goal_angle_change_speed">mGoalAngleChangeSpeed</string>
+    <string name="faller_preference_goal_speed_max">mGoalSpeedMax</string>
+    <string name="faller_preference_goal_speed_min">mGoalSpeedMin</string>
+    <string name="faller_preference_decrease_acceleration">mDecreaseAcceleration</string>
 </resources>

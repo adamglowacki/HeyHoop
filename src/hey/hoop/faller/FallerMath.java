@@ -1,5 +1,8 @@
 package hey.hoop.faller;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.atan2;
+
 public final class FallerMath {
     /**
      * If <code>v</code> is outside range [<code>start</code>, <code>end</code>], it is moved to the nearest boundary
@@ -20,7 +23,7 @@ public final class FallerMath {
         if (v <= start || v >= end) {
             if (tmp != null)
                 tmp[0] = true;
-            if (v < start) v = start;
+            if (v <= start) v = start;
             else v = end;
         }
         return v;
@@ -72,5 +75,16 @@ public final class FallerMath {
                 out[i] += matrix[i * d1 + j] * vector[j];
         }
         return out;
+    }
+
+    public static float findAngle(float a, float b) {
+        return (float) (atan2(b, a) * 180 / PI);
+    }
+
+    public static float normAngle(float alpha) {
+        alpha = alpha % 360;
+        if (alpha < 0)
+            alpha += 360;
+        return alpha;
     }
 }

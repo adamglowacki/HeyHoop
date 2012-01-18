@@ -21,14 +21,14 @@
         <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/walk_status"
                                                   android:layout_height="wrap_content"
                                                   android:layout_width="wrap_content"
-                                                  android:layout_gravity="center_horizontal"/>
+                                                  android:layout_gravity="right"/>
         <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/drink_status"
                                                   android:layout_height="wrap_content"
                                                   android:layout_width="wrap_content"
-                                                  android:layout_gravity="center_horizontal"/>
+                                                  android:layout_gravity="right"/>
         <hey.hoop.custom_view.WellbeingStatusView android:id="@+id/food_status"
                                                   android:layout_height="wrap_content"
                                                   android:layout_width="wrap_content"
-                                                  android:layout_gravity="center_horizontal"/>
+                                                  android:layout_gravity="right"/>
     </LinearLayout>
 </RelativeLayout>
