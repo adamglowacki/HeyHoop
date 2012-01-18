@@ -10,14 +10,16 @@ import android.view.View;
 public class FallerSurfaceView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
     private Context mContext;
     private FallerDrawer mDrawer;
+    private Thread mDrawerThread;
 
     public FallerSurfaceView(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
 
+        mContext = ctx;
         setOnTouchListener(this);
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
-        mDrawer = new FallerDrawer(ctx, surfaceHolder);
+        mDrawer = new FallerDrawer(mContext, surfaceHolder);
     }
 
     public FallerDrawer getDrawer() {
@@ -27,8 +29,8 @@ public class FallerSurfaceView extends SurfaceView implements SurfaceHolder.Call
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
         mDrawer.setSurfaceReady(true);
-        mDrawer.start();
-
+        mDrawerThread = new Thread(mDrawer);
+        mDrawerThread.start();
     }
 
     @Override
@@ -42,7 +44,7 @@ public class FallerSurfaceView extends SurfaceView implements SurfaceHolder.Call
         mDrawer.setSurfaceReady(false);
         while (running) {
             try {
-                mDrawer.join();
+                mDrawerThread.join();
                 running = false;
             } catch (InterruptedException e) { /* ignore */ }
         }
@@ -54,7 +56,10 @@ public class FallerSurfaceView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        mDrawer.unpause();
-        return true;
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            mDrawer.switchPause();
+            return true;
+        }
+        return false;
     }
 }

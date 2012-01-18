@@ -17,7 +17,7 @@ public final class FallerMath {
             assert tmp.length > 0;
             tmp[0] = false;
         }
-        if (v < start || v > end) {
+        if (v <= start || v >= end) {
             if (tmp != null)
                 tmp[0] = true;
             if (v < start) v = start;

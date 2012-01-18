@@ -6,7 +6,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
-public class FallerSensorListener extends Thread implements SensorEventListener {
+public class FallerSensorListener implements Runnable, SensorEventListener {
     private static final long MAX_SLEEP_TIME = 2000;
     private static final String TAG = FallerSensorListener.class.getCanonicalName();
 
