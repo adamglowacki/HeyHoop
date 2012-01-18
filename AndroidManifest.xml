@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
-            android:icon="@drawable/ic_launcher"
+            android:icon="@drawable/hh_ic"
             android:label="@string/app_name">
         <provider
                 android:authorities="hey.hoop.provider"
@@ -23,26 +23,21 @@
                 android:name=".HeyHoopActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".faller.FallerActivity"/>
+        <activity android:label="@string/faller_title" android:name=".faller.FallerActivity"
+                  android:icon="@drawable/faller_ic">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
 
         <receiver android:name=".services.ServiceLaunchReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
-        </receiver>
-
-        <receiver android:name=".appwidget.WidgetProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="hey.hoop.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <meta-data android:name="android.appwidget.provider" android:resource="@xml/appwidget_info"/>
         </receiver>
 
         <service android:name=".services.ListenerService">

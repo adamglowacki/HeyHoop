@@ -8,18 +8,16 @@ import android.view.SurfaceView;
 import android.view.View;
 
 public class FallerSurfaceView extends SurfaceView implements SurfaceHolder.Callback, View.OnTouchListener {
-    private Context mContext;
     private FallerDrawer mDrawer;
     private Thread mDrawerThread;
 
     public FallerSurfaceView(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
 
-        mContext = ctx;
         setOnTouchListener(this);
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
-        mDrawer = new FallerDrawer(mContext, surfaceHolder);
+        mDrawer = new FallerDrawer(ctx, surfaceHolder);
     }
 
     public FallerDrawer getDrawer() {

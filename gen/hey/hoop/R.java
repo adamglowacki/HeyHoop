@@ -55,14 +55,16 @@ public final class R {
         public static final int chart=0x7f020014;
         public static final int drink=0x7f020015;
         public static final int faller_background=0x7f020016;
-        public static final int food=0x7f020017;
-        public static final int ic_launcher=0x7f020018;
-        public static final int kangaroo_normal=0x7f020019;
-        public static final int kangaroo_zzz=0x7f02001a;
-        public static final int transparent_background=0x7f02001e;
-        public static final int wake=0x7f02001b;
-        public static final int walk=0x7f02001c;
-        public static final int zzz=0x7f02001d;
+        public static final int faller_ic=0x7f020017;
+        public static final int food=0x7f020018;
+        public static final int hh_ic=0x7f020019;
+        public static final int ic_launcher=0x7f02001a;
+        public static final int kangaroo_normal=0x7f02001b;
+        public static final int kangaroo_zzz=0x7f02001c;
+        public static final int transparent_background=0x7f020020;
+        public static final int wake=0x7f02001d;
+        public static final int walk=0x7f02001e;
+        public static final int zzz=0x7f02001f;
     }
     public static final class id {
         public static final int animalWindow=0x7f0d0004;

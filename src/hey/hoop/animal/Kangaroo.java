@@ -1,7 +1,5 @@
 package hey.hoop.animal;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.os.Vibrator;
 import android.view.Gravity;
@@ -11,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import hey.hoop.HHDbAdapter;
 import hey.hoop.R;
-import hey.hoop.appwidget.WidgetProvider;
 
 import java.util.Date;
 import java.util.Random;
@@ -56,17 +53,16 @@ public class Kangaroo implements Animal {
 
     @Override
     public void resume(Context ctx) {
-        refresh(ctx);
+        refresh();
     }
 
-    private void refresh(Context ctx) {
+    private void refresh() {
         if (isAsleep())
             mWindow.setImageResource(R.drawable.kangaroo_zzz);
         else
             mWindow.setImageResource(R.drawable.kangaroo_normal);
         mOnStateChange.execute();
         mWindow.invalidate();
-        updateWidget(ctx);
     }
 
     @Override
@@ -154,13 +150,6 @@ public class Kangaroo implements Animal {
         }
     }
 
-    private void updateWidget(Context ctx) {
-        WidgetProvider widgetProvider = new WidgetProvider();
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(ctx);
-        ComponentName componentName = new ComponentName(ctx, WidgetProvider.class);
-        widgetProvider.onUpdate(ctx, appWidgetManager, appWidgetManager.getAppWidgetIds(componentName));
-    }
-
     private void setAsleepInDb(boolean toSleep) {
         mDbAdapter.open(true);
         try {
@@ -178,7 +167,7 @@ public class Kangaroo implements Animal {
         mVibrator.vibrate(BED_VIBRATIONS, -1);
         showToast(R.string.bed_thanks);
         setAsleepInDb(true);
-        refresh(ctx);
+        refresh();
 
     }
 
@@ -187,7 +176,7 @@ public class Kangaroo implements Animal {
         mVibrator.vibrate(WAKE_VIBRATIONS, -1);
         showToast(R.string.bed_hello);
         setAsleepInDb(false);
-        refresh(ctx);
+        refresh();
     }
 
     @Override
