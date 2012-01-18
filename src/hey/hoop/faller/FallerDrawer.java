@@ -20,7 +20,6 @@ import static java.lang.Math.atan2;
 public class FallerDrawer implements Runnable {
     private static final float ACCELERATION_SCALE_FACTOR = 0.15f;
     private static final float RESISTANCE_SCALE_FACTOR = 0.08f;
-    private static final float ANIMAL_RADIUS = 20;
     private static final float GOAL_RADIUS = 30;
     private static final float GOAL_OUTER_RADIUS = GOAL_RADIUS + 10;
     private static final float CLOCK_MARGIN = 50;
@@ -29,6 +28,19 @@ public class FallerDrawer implements Runnable {
     private static final float GOAL_SPEED_MIN = 0.1f;
     private static final float GOAL_SPEED_CHANGE_ANGLE = (float) Math.PI / 4;
     private static final float PAUSED_TEXT_SIZE = 40;
+
+    private static final String SAVED_X = "x";
+    private static final String SAVED_Y = "y";
+    private static final String SAVED_ANIMAL_ANGLE = "mAnimalAngle";
+    private static final String SAVED_DX = "dx";
+    private static final String SAVED_DY = "dy";
+    private static final String SAVED_GOAL_X = "goalX";
+    private static final String SAVED_GOAL_Y = "goalY";
+    private static final String SAVED_GOAL_SPEED_X = "goalSpeedX";
+    private static final String SAVED_GOAL_SPEED_Y = "goalSpeedY";
+    private static final String SAVED_ACCIDENT = "mAccident";
+    private static final String SAVED_ACCIDENTS_TIME = "mAccidentsTime";
+
 
     private final SurfaceHolder mSurfaceHolder;
     private boolean mSurfaceReady;
@@ -49,6 +61,10 @@ public class FallerDrawer implements Runnable {
     private float mGeomagnetic[];
     private FallerSensorListener mSensorListener;
     private long mAccidentsTime;
+
+    private boolean mDecreaseAcceleration = false;
+    private float mResistanceScaleFactor = RESISTANCE_SCALE_FACTOR;
+    private float mAccelerationScaleFactor = ACCELERATION_SCALE_FACTOR;
 
     private float x;
     private float y;
@@ -107,13 +123,35 @@ public class FallerDrawer implements Runnable {
     public Bundle saveState(Bundle map) {
         if (map != null)
             synchronized (mSurfaceHolder) {
+                map.putFloat(SAVED_X, x);
+                map.putFloat(SAVED_Y, y);
+                map.putFloat(SAVED_ANIMAL_ANGLE, mAnimalAngle);
+                map.putFloat(SAVED_DX, dx);
+                map.putFloat(SAVED_DY, dy);
+                map.putFloat(SAVED_GOAL_X, goalX);
+                map.putFloat(SAVED_GOAL_Y, goalY);
+                map.putFloat(SAVED_GOAL_SPEED_X, goalSpeedX);
+                map.putFloat(SAVED_GOAL_SPEED_Y, goalSpeedY);
+                map.putBoolean(SAVED_ACCIDENT, mAccident);
+                map.putLong(SAVED_ACCIDENTS_TIME, mAccidentsTime);
             }
         return map;
     }
 
     public void restoreState(Bundle map) {
         synchronized (mSurfaceHolder) {
-            /* ... */
+            x = map.getFloat(SAVED_X);
+            y = map.getFloat(SAVED_Y);
+            mAnimalAngle = map.getFloat(SAVED_ANIMAL_ANGLE);
+            dx = map.getFloat(SAVED_DX);
+            dy = map.getFloat(SAVED_DY);
+            goalX = map.getFloat(SAVED_GOAL_X);
+            goalY = map.getFloat(SAVED_GOAL_Y);
+            goalSpeedX = map.getFloat(SAVED_GOAL_SPEED_X);
+            goalSpeedY = map.getFloat(SAVED_GOAL_SPEED_Y);
+            mAccident = map.getBoolean(SAVED_ACCIDENT);
+            mAccidentsTime = map.getLong(SAVED_ACCIDENTS_TIME);
+            mCountDown.countDown();
         }
     }
 
@@ -127,15 +165,6 @@ public class FallerDrawer implements Runnable {
             mCountDown.await();
         } catch (InterruptedException e) {
             return;
-        }
-        synchronized (mSurfaceHolder) {
-            x = mRandom.nextInt(mCanvasWidth);
-            y = mRandom.nextInt(mCanvasHeight);
-            goalX = mRandom.nextInt(mCanvasWidth);
-            goalY = mRandom.nextInt(mCanvasHeight);
-            goalSpeedX = 0;
-            goalSpeedY = mRandom.nextFloat() * (GOAL_SPEED_MAX - GOAL_SPEED_MIN) + GOAL_SPEED_MIN;
-            mPaused = true;
         }
         mSensorListener.setNeeded(true);
         Thread sensorListenerThread = new Thread(mSensorListener);
@@ -175,24 +204,26 @@ public class FallerDrawer implements Runnable {
 
     private void updateSituation(float[] orientation, long timestamp) {
         long elapsed = timestamp - mLastTimestamp;
-        float accelerationX = -orientation[0] * ACCELERATION_SCALE_FACTOR;
+        float accelerationX = -orientation[0] * mAccelerationScaleFactor;
         /* We do not minus Y orientation because screen Y coordinates start with 0 on the top instead of the bottom. */
-        float accelerationY = orientation[1] * ACCELERATION_SCALE_FACTOR;
-        { /* make it more similar to each other */
-//            accelerationX = FallerMath.decreaseAbsValue(accelerationX);
-//            accelerationY = FallerMath.decreaseAbsValue(accelerationY);
+        float accelerationY = orientation[1] * mAccelerationScaleFactor;
+        if (mDecreaseAcceleration) {
+            accelerationX = FallerMath.decreaseAbsValue(accelerationX);
+            accelerationY = FallerMath.decreaseAbsValue(accelerationY);
+        }
+//        { /* make it more similar to each other */
 //            float absAccelerationX = abs(accelerationX);
 //            float absAccelerationY = abs(accelerationY);
 //            if (absAccelerationX < absAccelerationY)
 //                accelerationY = copySign(absAccelerationX + absAccelerationY, accelerationY);
 //            else
 //                accelerationX = copySign(absAccelerationX + absAccelerationY, accelerationX);
-        }
+//        }
         float accelerationAngle = findAngle(accelerationX, accelerationY);
-        mAnimalAngle = (float) (accelerationAngle - PI);
+        mAnimalAngle = normAngle(accelerationAngle + 90);
         { /* introduce resistance */
-            accelerationX -= RESISTANCE_SCALE_FACTOR * dx;
-            accelerationY -= RESISTANCE_SCALE_FACTOR * dy;
+            accelerationX -= mResistanceScaleFactor * dx;
+            accelerationY -= mResistanceScaleFactor * dy;
         }
         dx += accelerationX * elapsed;
         dy += accelerationY * elapsed;
@@ -216,7 +247,7 @@ public class FallerDrawer implements Runnable {
         goalY += goalSpeedY * elapsed;
         goalX = putIntoRange(goalX, 0, mCanvasWidth, null);
         goalY = putIntoRange(goalY, 0, mCanvasHeight, null);
-        mAccident = sqr(x - goalX) + sqr(y - goalY) < sqr(GOAL_RADIUS - ANIMAL_RADIUS);
+        mAccident = sqr(x - goalX) + sqr(y - goalY) < sqr(GOAL_RADIUS);
         if (mAccident)
             mAccidentsTime += elapsed;
     }
@@ -259,6 +290,15 @@ public class FallerDrawer implements Runnable {
         if (!mSurfaceSizeObtained) {
             /* signal the first configuration */
             mSurfaceSizeObtained = true;
+            synchronized (mSurfaceHolder) {
+                x = mRandom.nextInt(mCanvasWidth);
+                y = mRandom.nextInt(mCanvasHeight);
+                goalX = mRandom.nextInt(mCanvasWidth);
+                goalY = mRandom.nextInt(mCanvasHeight);
+                goalSpeedX = 0;
+                goalSpeedY = mRandom.nextFloat() * (GOAL_SPEED_MAX - GOAL_SPEED_MIN) + GOAL_SPEED_MIN;
+                mPaused = true;
+            }
             mCountDown.countDown();
         }
     }
@@ -273,5 +313,12 @@ public class FallerDrawer implements Runnable {
 
     private float findAngle(float a, float b) {
         return (float) (atan2(b, a) * 180 / PI);
+    }
+
+    private float normAngle(float alpha) {
+        alpha = alpha % 360;
+        if (alpha < 0)
+            alpha += 360;
+        return alpha;
     }
 }
